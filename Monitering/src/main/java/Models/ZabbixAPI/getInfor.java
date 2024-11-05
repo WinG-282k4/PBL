@@ -7,7 +7,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
@@ -42,22 +44,134 @@ public class getInfor {
             getInfor.getInstance().getHosts(authToken);
             
             String host ="10640";
-            
+            //Name
+        	System.out.print("Name: " + getInfor.getInstance().getName(host) + "\n");
+        	
             while(true) {
-
-            // Lấy CPU load cho một host cụ thể (thay hostId bằng ID host thực tế)
-            System.out.print("CPU :" + getInfor.getInstance().getCpuLoad(host) + "%\n");
-
-            // Lấy thông tin băng thông mạng
-            System.out.print("Receive: " + getInfor.getInstance().getNetworkTraffic_recei(host) + "Kbps\n");
-            System.out.print("Send: " + getInfor.getInstance().getNetworkTraffic_send(host) + "Kbps\n");
-            
-            System.out.print("\n");
-            TimeUnit.SECONDS.sleep(30);
+            	            	
+	            // Lấy CPU load cho một host cụ thể (thay hostId bằng ID host thực tế)
+	            System.out.print("CPU :" + getInfor.getInstance().getCpuLoad(host) + "\n");
+	
+	            // Lấy thông tin băng thông mạng
+	            System.out.print("Receive: " + getInfor.getInstance().getNetworkTraffic_recei(host) + "\n");
+	            System.out.print("Send: " + getInfor.getInstance().getNetworkTraffic_send(host) + "\n");
+	            
+	            
+	            //Lấy thông tin RAM
+	            System.out.print("RAM: " + getInfor.getInstance().getRAMInfo_total(host) + "\n");
+	            System.out.print("RAM-used: " + getInfor.getInstance().getRAMInfo_used(host) + "\n");
+	            System.out.print("RAM-util: " + getInfor.getInstance().getRAMInfo_util(host) + "\n");
+	            
+	            //Thời gian sử dụng
+	            System.out.print("Time(hardware): " + getInfor.getInstance().getTime_hardware(host) + "\n");
+	            System.out.print("Time(network): " + getInfor.getInstance().getTime_network(host) + "\n");
+	            
+	            //Các ổ đĩa
+	            List<DiskInfo> disk = getInstance().getDiskInfo(host);
+	            for (DiskInfo diskInfo : disk) {
+	                System.out.println("Disk name: " + diskInfo.name);
+	                System.out.println("Last Value: " + diskInfo.lastValue);
+	            }
+	            
+	            System.out.print("\n");
+	            TimeUnit.SECONDS.sleep(30);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+    }
+    
+ // Lấy thông tin ổ đĩa
+    List<DiskInfo> getDiskInfo(String hostId) throws Exception {
+        JSONObject request = new JSONObject();
+        request.put("jsonrpc", "2.0");
+        request.put("method", "item.get");
+        request.put("params", new JSONObject()
+                .put("output", "extend")
+                .put("hostids", hostId)
+                .put("search", new JSONObject().put("key_", "vfs.fs"))); // Tìm kiếm các item có key vfs.fs
+        request.put("auth", authToken);
+        request.put("id", 1);
+
+        String response = getInfor.getInstance().sendRequest(request);
+        JSONArray items = new JSONObject(response).getJSONArray("result");
+
+        List<DiskInfo> diskInfoList = new ArrayList<>();
+
+        for (int i = 0; i < items.length(); i++) {
+            JSONObject item = items.getJSONObject(i);
+            String diskName = item.getString("name");
+            String lastValueStr = item.optString("lastvalue", ""); // Lấy giá trị lastvalue
+
+            // Bỏ qua mục không cần thiết
+            if (diskName.contains("Windows: SNMP walk mounted filesystems")) {
+                continue;
+            }
+
+            double lastValueInGB = 0.0; // Khởi tạo biến để lưu giá trị sau khi chuyển đổi
+            String lastValueOutput = ""; // Biến để lưu giá trị đầu ra
+
+            // Kiểm tra xem lastValueStr có rỗng hay không
+            if (!lastValueStr.isEmpty()) {
+                try {
+                    // Kiểm tra nếu lastValueStr chứa ký tự '%'
+                    if (diskName.contains("%")) {
+                        // Giá trị là phần trăm, không cần chia
+                    	double lastValue = Double.parseDouble(lastValueStr); // Chuyển đổi sang double
+                        lastValueOutput = String.format("%.2f", lastValue) + " %"; // Lưu lại giá trị phần trăm
+                    } else {
+                        // Giá trị là dung lượng, chia cho 1024^3 để chuyển đổi thành GB
+                        double lastValue = Double.parseDouble(lastValueStr); // Chuyển đổi sang double
+                        lastValueInGB = lastValue / (1024 * 1024 * 1024); // Chia để chuyển đổi thành GB
+                        lastValueOutput = String.format("%.2f GB", lastValueInGB); // Định dạng giá trị ra 2 chữ số thập phân
+                    }
+                } catch (NumberFormatException e) {
+                    // Bỏ qua các lỗi khi phân tích giá trị
+                    continue; // Bỏ qua nếu có lỗi
+                }
+            } else {
+                System.out.println("Last value is empty for disk: " + diskName);
+                continue; // Bỏ qua nếu giá trị trống
+            }
+
+            // Thêm thông tin ổ đĩa vào danh sách
+            diskInfoList.add(new DiskInfo(diskName, lastValueOutput));
+        }
+
+        return diskInfoList;
+    }
+
+
+
+    
+    //Lấy tên thiết bị
+    public String getName(String hostId) throws IOException {
+    	return Item_get.getIntance().getInfor(hostId, "system.name", authToken);
+    }
+    
+  //Thời gian sử dụng mang
+    public String getTime_network(String hostId) throws Exception {
+    	String uptimeInSeconds = Item_get.getIntance().getInfor(hostId,"system.net.uptime" , authToken);
+    	long seconds = Long.parseLong(uptimeInSeconds);
+
+        long hours = seconds / 3600;
+        long minutes = (seconds % 3600) / 60;
+        long remainingSeconds = seconds % 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
+    }
+    
+    //Thời gian sử dụng máy
+    public String getTime_hardware(String hostId) throws Exception {
+    	String uptimeInSeconds = Item_get.getIntance().getInfor(hostId,"system.hw.uptime" , authToken);
+    	long seconds = Long.parseLong(uptimeInSeconds);
+
+        long hours = seconds / 3600;
+        long minutes = (seconds % 3600) / 60;
+        long remainingSeconds = seconds % 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
     }
     
     // Lấy token xác thực từ Zabbix
@@ -126,121 +240,56 @@ public class getInfor {
         System.out.println("Hosts: " + jsonResponse.get("result"));
     }
 
-    // Lệnh lấy CPU load
+    // Lệnh lấy % CPU load
     public String getCpuLoad(String hostId) throws IOException {
-        JSONObject json = new JSONObject();
-        json.put("jsonrpc", "2.0");
-        json.put("method", "item.get");
-        json.put("params", new JSONObject() {{
-            put("output", new JSONArray(Arrays.asList("lastvalue")));  // Chỉ lấy giá trị cuối
-            put("hostids", hostId);
-            put("search", new JSONObject() {{
-                put("key_", "system.cpu.util");
-            }});
-        }});
-        json.put("auth", authToken);
-        json.put("id", 1);
-
-        String response = sendRequest(json);
-
-        // Phân tích phản hồi JSON
-        JSONObject jsonResponse = new JSONObject(response);
-        JSONArray resultArray = jsonResponse.getJSONArray("result");
-        String lastValue = null;
-        if (resultArray.length() > 0) {
-        	lastValue = resultArray.getJSONObject(0).getString("lastvalue");
-        } 
-        return lastValue;
+    	
+    	return Item_get.getIntance().getInfor(hostId,"system.cpu.util" , authToken) + " %";
+        
     }
     
  // Lấy tốc độ bit mạng nhận
     public String getNetworkTraffic_recei(String hostId) throws IOException {
+    	return Item_get.getIntance().getInfor(hostId,"net.if.in" , authToken) + " Kbps";
     	
-        String lastValueIn = "0";
-
-        // Tạo một đối tượng JSON cho request
-        JSONObject json = new JSONObject();
-        json.put("jsonrpc", "2.0");
-        json.put("method", "item.get");
-        json.put("params", new JSONObject() {{
-            put("output", "extend");
-            put("hostids", hostId);
-            put("search", new JSONObject() {{
-            	put("key_", "net.if.in");
-            }}); // Tìm kiếm tất cả các item
-        }});
-        json.put("auth", authToken);
-        json.put("id", 1);
-
-        // Gửi yêu cầu và nhận phản hồi
-        String responseIn = sendRequest(json);
-        JSONObject jsonResponseIn = new JSONObject(responseIn);
-
-        // Kiểm tra xem phản hồi có trường "error" không
-        if (jsonResponseIn.has("error")) {
-            JSONObject errorObject = jsonResponseIn.getJSONObject("error");
-            System.err.println("Error: " + errorObject.getString("message") + " - " + errorObject.getString("data"));
-            return "Error: " + errorObject.getString("message");
-        }
-
-        // Xử lý phản hồi để lấy băng thông nhận
-        JSONArray resultArrayIn = jsonResponseIn.getJSONArray("result");
-        for (int i = 0; i < resultArrayIn.length(); i++) {
-            String lastValueOut = resultArrayIn.getJSONObject(i).optString("lastvalue", "0");
-            if (!lastValueOut.equals("0")) {
-                lastValueIn = lastValueOut; // Cập nhật lastValueIn nếu tìm thấy giá trị hợp lệ
-                break; // Thoát khỏi vòng lặp nếu có giá trị hợp lệ
-            }
-        }
-
-        return lastValueIn;
     }
 
+ // Lấy thông tin RAM tối đa
+    public String getRAMInfo_total(String hostId) throws IOException {
+    	String ramValue = Item_get.getIntance().getInfor(hostId, "vm.memory.walk.data.total", authToken);
+    	
+        // Chuyển đổi byte sang GB
+        double ramInGB = Double.parseDouble(ramValue) / (1024 * 1024 * 1024);
+        
+        // Định dạng thành chuỗi với 2 chữ số thập phân
+        return String.format("%.2f GB", ramInGB);
+        
+    }
+    
+ // Lấy thông tin RAM đã sử dụng
+    public String getRAMInfo_used(String hostId) throws IOException {
+    	String ramValue = Item_get.getIntance().getInfor(hostId, "vm.memory.used", authToken);
+    	
+        // Chuyển đổi byte sang GB
+        double ramInGB = Double.parseDouble(ramValue) / (1024 * 1024 * 1024);
+        
+        // Định dạng thành chuỗi với 2 chữ số thập phân
+        return String.format("%.2f GB", ramInGB);
 
+    }
+    
+ // Lấy thông tin RAM % đang sử dụng
+    public String getRAMInfo_util(String hostId) throws IOException {
+    	String ramValue = Item_get.getIntance().getInfor(hostId, "vm.memory.util", authToken);
+    	 // Chuyển đổi byte sang GB
+        double ramInGB = Double.parseDouble(ramValue);
+        
+        // Định dạng thành chuỗi với 2 chữ số thập phân
+        return String.format("%.2f%%", ramInGB);
+    }
     
  // Lấy tốc độ bit mạng gửi
     public String getNetworkTraffic_send(String hostId) throws IOException {
-
-        // Tạo một đối tượng JSON cho request
-        JSONObject json = new JSONObject();
-        json.put("jsonrpc", "2.0");
-        json.put("method", "item.get");
-        json.put("params", new JSONObject() {{
-            put("output", "extend");
-            put("hostids", hostId);
-            put("search", new JSONObject(){{
-            	put("key_", "net.if.out");
-            }});
-        }});
-        json.put("auth", authToken);
-        json.put("id", 1);
-
-        // Gửi yêu cầu và nhận phản hồi
-        String responseOut = sendRequest(json);
-        JSONObject jsonResponseOut = new JSONObject(responseOut);
-
-        // Kiểm tra lỗi
-        if (jsonResponseOut.has("error")) {
-            JSONObject errorObject = jsonResponseOut.getJSONObject("error");
-            System.err.println("Error: " + errorObject.getString("message") + " - " + errorObject.getString("data"));
-            return "Error: " + errorObject.getString("message");
-        }
-
-        // Lưu trữ giá trị cuối cùng
-        String lastValue = "0";
-
-        // Duyệt qua từng item trong phản hồi
-        JSONArray resultArrayOut = jsonResponseOut.getJSONArray("result");
-        for (int i = 0; i < resultArrayOut.length(); i++) {
-            String lastValueOut = resultArrayOut.getJSONObject(i).optString("lastvalue", "0");
-            // Cập nhật lastValue nếu cần
-            if (!lastValueOut.equals("0")) {
-                lastValue = lastValueOut;
-                break; // Thoát nếu tìm thấy giá trị hợp lệ
-            }
-        }
-
-        return lastValue;
+    	return Item_get.getIntance().getInfor(hostId,"net.if.out" , authToken) + " Kbps";
     }
 
     //Gui vaf nhan ket qua tu server
@@ -296,8 +345,6 @@ public class getInfor {
 //            System.out.println("Item ID: " + item.getString("itemid") + ", Key: " + item.getString("key_"));
 //        }
 //    }
-
+}
 
     
-
-}
