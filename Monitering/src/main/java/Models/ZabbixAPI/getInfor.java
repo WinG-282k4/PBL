@@ -19,7 +19,7 @@ import io.github.hengyunabc.zabbix.api.ZabbixApi;
 
 public class getInfor {
 
-    private static final String ZABBIX_API_URL = "http://192.168.0.69/zabbix/api_jsonrpc.php";
+    private static final String ZABBIX_API_URL = "http://10.10.2.170/zabbix/api_jsonrpc.php";
     private static String USER = "Admin";
     private static String PASSWORD = "zabbix";
     private static String authToken = "";
@@ -43,7 +43,7 @@ public class getInfor {
             // Lấy danh sách host
             getInfor.getInstance().getHosts(authToken);
             
-            String host ="10640";
+            String host ="10084";
             //Name
         	System.out.print("Name: " + getInfor.getInstance().getName(host) + "\n");
         	
