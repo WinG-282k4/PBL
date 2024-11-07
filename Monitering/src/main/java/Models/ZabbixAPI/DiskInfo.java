@@ -1,5 +1,10 @@
 package Models.ZabbixAPI;
 
+import java.io.IOException;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 // Thêm class để lưu thông tin ổ đĩa
 class DiskInfo {
     String name;
@@ -9,4 +14,10 @@ class DiskInfo {
         this.name = name;
         this.lastValue = lastValue;
     }
+    
+    public static void main(String[] args) {
+		System.out.print(new DiskInfo(null, null));
+	}
+    
+
 }
