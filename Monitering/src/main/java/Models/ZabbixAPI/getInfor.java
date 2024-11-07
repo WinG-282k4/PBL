@@ -19,7 +19,7 @@ import io.github.hengyunabc.zabbix.api.ZabbixApi;
 
 public class getInfor {
 
-    private static final String ZABBIX_API_URL = "http://192.168.0.69/zabbix/api_jsonrpc.php";
+    private static final String ZABBIX_API_URL = "http://10.10.2.170/zabbix/api_jsonrpc.php";
     private static String USER = "Admin";
     private static String PASSWORD = "zabbix";
     private static String authToken = "";
@@ -43,7 +43,7 @@ public class getInfor {
             // Lấy danh sách host
             getInfor.getInstance().getHosts(authToken);
             
-            String host ="10640";
+            String host ="10639";
             //Name
         	System.out.print("Name: " + getInfor.getInstance().getName(host) + "\n");
         	
@@ -73,6 +73,9 @@ public class getInfor {
 	                System.out.println("Last Value: " + diskInfo.lastValue);
 	            }
 	            
+	            //test
+	            System.out.print("SNMPINDEX: " + getInstance().testgetSNMP(host, "vfs.fs.discovery", authToken));
+	            
 	            System.out.print("\n");
 	            TimeUnit.SECONDS.sleep(30);
             }
@@ -81,6 +84,62 @@ public class getInfor {
         }
         
     }
+    
+    public String testgetSNMP(String hostId, String key, String authToken) throws IOException {
+        String discoveryRuleId ;
+
+        // Step 1: Tìm rule ID của discovery rule
+        JSONObject json = new JSONObject();
+        json.put("jsonrpc", "2.0");
+        json.put("method", "discoveryrule.get");
+        json.put("params", new JSONObject() {{
+            put("output", new JSONArray().put("itemid"));
+            put("hostids", hostId);
+            put("search", new JSONObject() {{
+ // Key cho discovery rule liên quan đến ổ đĩa
+            }});
+        }});
+        json.put("auth", authToken);
+        json.put("id", 1);
+
+        String response = sendRequest(json);
+        JSONObject jsonResponse = new JSONObject(response);
+
+        if (jsonResponse.has("error")) {
+            return "Error: " + jsonResponse.getJSONObject("error").getString("message");
+        }
+
+        JSONArray resultArray = jsonResponse.getJSONArray("result");
+        if (resultArray.length() > 0) {
+            discoveryRuleId = resultArray.getJSONObject(0).getString("itemid");
+        } else {
+            return "No discovery rule found.";
+        }
+
+        // Step 2: Lấy các item liên quan đến rule ID
+        json = new JSONObject();
+        json.put("jsonrpc", "2.0");
+        json.put("method", "item.get");
+        json.put("params", new JSONObject() {{
+            put("output", new JSONArray().put("lastvalue"));
+            put("hostids", hostId);
+            put("discoveryids", discoveryRuleId);
+        }});
+        json.put("auth", authToken);
+        json.put("id", 2);
+
+        response = sendRequest(json);
+        jsonResponse = new JSONObject(response);
+
+        if (jsonResponse.has("error")) {
+            return "Error: " + jsonResponse.getJSONObject("error").getString("message");
+        }
+
+        resultArray = jsonResponse.getJSONArray("result");
+        int diskCount = resultArray.length();  // Số lượng ổ đĩa được phát hiện
+        return String.valueOf(diskCount);
+    }
+
     
  // Lấy thông tin ổ đĩa
     List<DiskInfo> getDiskInfo(String hostId) throws Exception {

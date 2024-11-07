@@ -27,7 +27,7 @@ public class Item_get {
 	}
 	
 	//IP server zabbix
-	private static final String ZABBIX_API_URL = "http://192.168.0.69/zabbix/api_jsonrpc.php";
+	private static final String ZABBIX_API_URL = "http://10.10.2.170/zabbix/api_jsonrpc.php";
 	
 	// Lấy 1 thông tin với key
     public String getInfor(String hostId, String key, String authToken) throws IOException {
