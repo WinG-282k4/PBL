@@ -1,8 +1,9 @@
 package Model;
 
+//Class để lưu thông tin ổ đĩa
 public class Disk {
-	    String name;
-	    String lastValue;
+	    public String name;
+	    public String lastValue;
 
 	    public Disk(String name, String lastValue) {
 	        this.name = name;
