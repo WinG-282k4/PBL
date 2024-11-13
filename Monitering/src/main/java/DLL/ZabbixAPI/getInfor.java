@@ -41,7 +41,7 @@ public class getInfor {
             authToken = Item_get.getInstance().authenticate(user, password);
             System.out.println("Authenticated with token: " + authToken);
             
-            String host ="10641";
+            String host ="10640";
 
 //            //Name
 //        	System.out.print("Name: " + getInfor.getInstance().getName(host) + "\n");
