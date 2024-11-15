@@ -138,6 +138,7 @@ public class Host_CRUD {
         	//Xử lý kết quả\
         	String IP = SNMP.optString("ip", "0");
         	String available =SNMP.optString("available", "0"); //Trạng thái kết nối
+        	
         	//Lấy detail : "details":{"bulk":"1","community":"password","version":"2","max_repetitions":"10"}
 	        JSONObject detail = SNMP.getJSONObject("details");
 	        String community = detail.optString("community", "N/A");
