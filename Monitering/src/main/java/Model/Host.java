@@ -9,6 +9,7 @@ public class Host {
 	String SNMP;
 	String SNMP_community;
 	String SNMP_version;
+	String Description;
 	
 	public String id() {
 		return hostid;
@@ -34,7 +35,11 @@ public class Host {
 		return SNMP_community;
 	}
 	
-	public Host(String name, String id, String Group, String gname, String IP, String status, String community, String version) {
+	public String descript() {
+		return Description;
+	}
+	
+	public Host(String name, String id, String Group, String gname, String IP, String status, String community, String version, String Decript) {
 		// TODO Auto-generated constructor stub
 		hostName = name;
 		hostid = id;
@@ -44,6 +49,7 @@ public class Host {
 		SNMP = status;
 		SNMP_community = community;
 		SNMP_version = version;
+		Description = Decript;
 	}
 	
 	public void Display() {
@@ -56,6 +62,7 @@ public class Host {
 		System.out.print("SNMP: " + SNMP + "\n");
 		System.out.print("Community: " + SNMP_community + "\n");
 		System.out.print("SNMP version: " + SNMP_version + "\n");
+		System.out.print("Decription: " + Description + "\n");
 
 	}
 }
