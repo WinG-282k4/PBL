@@ -38,8 +38,24 @@ public class Host_CRUD {
     	//Laays token
 		String token = Item_get.getInstance().authenticate("Admin", "zabbix");
 		
+//		Host temp = new Host("Thanh_Laptop", "10639", "22", "  ", "192.168.0.145", " ", "password", "2", "Test tạo host 1");
+		Host temp = new Host("Thanh_Laptop", "10639", "22", "  ", "10.10.28.174", " ", "password", "2", "Laptop của Thanh");
+//		getInstance().getTemplates(token, Item_get.getInstance().getURL());
+		
+//		//Tạo host
+//		String Create_host = getInstance().Create_Host(temp, token);
+//		System.out.print(Create_host);
+		
+		//Update 1 host
+//		getInstance().Update_Host(temp, token);
+	
+//		//Test xóa host
+//		String rs = getInstance().Delete_Host(temp, token);
+//		System.out.print(rs);
+		
 		//Lấy danh sách device
 		List<Host> hs = getInstance().getHosts(token);
+		System.out.print("\n");
 		
 		//in ra test
 		for(Host H: hs) {
@@ -48,48 +64,227 @@ public class Host_CRUD {
 		}
 	}
     
-//    //Lấy toàn bộ thiết bị và thông tin
-//    public List<Device> getDevice(String authToken) {
-//    	
-//    	List<Device> rs = new ArrayList<Device>();
-//    	List<Host> hosts = getHosts(authToken);
-//    	getInfor.getInstance().setToken(authToken);
-//    	
-//    	for(Host host:hosts) {
-//    		String id = host.hostid;
-//    		String hname = host.hostname;
-//    		String name = null;
-//    		String CPUload = null;
-//    		String IP = null;
-//    		String SNMP = null;
-//    		String bitReceive = null;
-//    		String bitSend = null;
-//    		String RAM_total = null;
-//    		String RAM_used = null;
-//    		String RAM_util = null;
-//    		String Time_hw = null;
-//    		String Time_net = null;
-//    		List<Disk> ListDisk = null;
-//    		try {
-//    			name = getInfor.getInstance().getName(id);
-//    			CPUload = getInfor.getInstance().getCpuLoad(id);
-//    			IP = getInfor.getInstance().getIP(id);
-//    			SNMP = getInfor.getInstance().getSNMP(id);
-//        		bitReceive = getInfor.getInstance().getNetworkTraffic_recei(id);
-//        		bitSend = getInfor.getInstance().getNetworkTraffic_send(id);
-//        		RAM_total = getInfor.getInstance().getRAMInfo_total(id);
-//        		RAM_used = getInfor.getInstance().getRAMInfo_used(id);
-//        		RAM_util = getInfor.getInstance().getRAMInfo_util(id);
-//        		Time_hw = getInfor.getInstance().getTime_hardware(id);
-//        		Time_net = getInfor.getInstance().getTime_network(id);
-//        		ListDisk = getInfor.getInstance().getDiskInfo(id);
-//    		}catch (Exception e) {
-//				// TODO: handle exception
-//			}
-//    		rs.add(new Device( name, id, IP, SNMP, CPUload, bitReceive, bitSend, RAM_total, RAM_used, RAM_util, Time_hw, Time_net, ListDisk));
-//    	}
-//		return rs;
-//    }
+    //Hàm xoa một host
+    public String Delete_Host(Host host, String authtoken) {
+    	//Tạo json
+    	  JSONObject request = new JSONObject()
+    	            .put("jsonrpc", "2.0")
+    	            .put("method", "host.delete")
+    	            .put("id", 1)
+    	            .put("auth", authtoken) // Token xác thực
+    	            .put("params", new JSONObject()
+    	            	.put("hostid", Integer.parseInt(host.id()))
+    	            );
+    	  
+    	//Gửi request
+    	 JSONObject jsonResponse = null;
+  		try {
+  			jsonResponse = Item_get.getInstance().sendRequest(request);
+  		} catch (IOException e) {
+  			// TODO Auto-generated catch block
+  			e.printStackTrace();
+  		}
+  		try {
+  	  		JSONObject result =  jsonResponse.getJSONObject("result");
+  	  		return "Xóa host thành công";  
+  		}catch (Exception e) {
+  			// TODO: handle exception
+  			e.printStackTrace();
+  			//Bắt ngoại lệ khi json trả về lỗi
+    		return "Lỗi: " + jsonResponse.getJSONObject("error").optString("data");
+  		}    	
+    }
+    
+    //Update host
+    public String Update_Host(Host UHost, String authToken) {
+    	//Đổi interface trước khi cập nhập host (Nếu ko sẽ bị xung đột)
+    	UpdateInterface(UHost, authToken);
+    	
+    	//Tạo json
+  	  JSONObject request = new JSONObject()
+  	            .put("jsonrpc", "2.0")
+  	            .put("method", "host.update")
+  	            .put("id", 1)
+  	            .put("auth", authToken) // Thay YOUR_AUTH_TOKEN bằng token thực tế
+  	            .put("params", new JSONObject()
+  	            	.put("hostid", Integer.parseInt(UHost.id()))
+  	                .put("host", UHost.name())
+  	                .put("groups", new JSONArray()
+  	                    .put(new JSONObject()
+  	                        .put("groupid", UHost.groupid()) 
+  	                    )
+  	                )
+  	                .put("description", UHost.descript())
+  	                .put(authToken, false)
+  	                .put("templates", new JSONArray()
+  	                    .put(new JSONObject()
+  	                        .put("templateid", "10249") 
+  	                    )
+  	                )
+  	            );
+  	  
+  	//Gửi request
+  	 JSONObject jsonResponse = null;
+		try {
+			jsonResponse = Item_get.getInstance().sendRequest(request);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+	  		JSONObject result =  jsonResponse.getJSONObject("result");
+	  		return "Sửa host thành công";  
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			//Bắt ngoại lệ khi json trả về lỗi
+  			return "Lỗi: " + jsonResponse.getJSONObject("error").optString("data");
+		}    	
+    }
+    
+    //Cập nhập interface cho host (Dùng trong hàm Update_host
+    public void UpdateInterface(Host host, String authToken) {
+    	//Lấy interfaceid
+    	String interfaceid = getHostInterface(host.id(), authToken);
+    	
+    	//Cập nhập nó
+    	JSONObject addInterfaceRequest = new JSONObject()
+    		    .put("jsonrpc", "2.0")
+    		    .put("method", "hostinterface.update")
+    		    .put("params", new JSONObject()
+    		        .put("interfaceid", interfaceid)
+    		        .put("type", 2) // SNMP
+    		        .put("main", 1)
+    		        .put("useip", 1)
+    		        .put("ip", host.IP()) // Địa chỉ IP mới
+    		        .put("dns", "")
+    		        .put("port", "161")
+    		        .put("details", new JSONObject()
+    		            .put("version", 2)
+    		            .put("community", host.community())
+    		        )
+    		    )
+    		    .put("auth", authToken)
+    		    .put("id", 1);
+
+    		// Gửi yêu cầu thêm giao diện
+    		try {
+    		    JSONObject response = Item_get.getInstance().sendRequest(addInterfaceRequest);
+    		    System.out.println("Đã thêm giao diện mới: " + response);
+    		} catch (IOException e) {
+    		    e.printStackTrace();
+    		}
+
+    }
+    
+    //Láy interfaceid của 1 host
+    public String getHostInterface(String hostId, String authToken) {
+        try {
+            JSONObject request = new JSONObject()
+                .put("jsonrpc", "2.0")
+                .put("method", "hostinterface.get")
+                .put("id", 1)
+                .put("auth", authToken)
+                .put("params", new JSONObject()
+                    .put("hostids", hostId)
+                );
+
+            JSONObject response = Item_get.getInstance().sendRequest(request);
+
+            if (response.has("result")) {
+                JSONArray interfaces = response.getJSONArray("result");
+                for (int i = 0; i < interfaces.length(); i++) {
+                    JSONObject iface = interfaces.getJSONObject(i);
+                    System.out.println("Interface ID: " + iface.getString("interfaceid"));
+                    return iface.getString("interfaceid"); // Lấy ID của giao diện đầu tiên
+                }
+            } else {
+                System.out.println("Lỗi khi lấy danh sách interface: " + response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //Lấy tất cả thông tin Item của host để kt
+    public JSONArray getHostItems(String hostId, String authToken) {
+        JSONObject request = new JSONObject()
+            .put("jsonrpc", "2.0")
+            .put("method", "item.get")
+            .put("params", new JSONObject()
+                .put("hostids", hostId)
+                .put("output", "extend") // Lấy tất cả các thông tin item
+            )
+            .put("auth", authToken)
+            .put("id", 1);
+
+        try {
+            JSONObject response = Item_get.getInstance().sendRequest(request);
+            System.out.print(response.toString());
+            return response.getJSONArray("result");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new JSONArray();
+        }
+    }
+
+    //Thêm host 
+    public String Create_Host(Host C_host, String authToken ) {
+    	
+    	//Tạo json
+    	  JSONObject request = new JSONObject()
+    	            .put("jsonrpc", "2.0")
+    	            .put("method", "host.create")
+    	            .put("id", 1)
+    	            .put("auth", authToken) // Thay YOUR_AUTH_TOKEN bằng token thực tế
+    	            .put("params", new JSONObject()
+    	                .put("host", C_host.name())
+    	                .put("interfaces", new JSONArray()
+    	                    .put(new JSONObject()
+    	                        .put("type", 2)
+    	                        .put("main", 1)
+    	                        .put("useip", 1)
+    	                        .put("ip", C_host.IP())
+    	                        .put("dns", "")
+    	                        .put("port", "161")
+    	                        .put("details", new JSONObject()
+    	                            .put("version", C_host.version())
+    	                            .put("community", C_host.community())
+    	                        )
+    	                    )
+    	                )
+    	                .put("description", C_host.descript())
+    	                .put("groups", new JSONArray()
+    	                    .put(new JSONObject()
+    	                        .put("groupid", C_host.groupid()) // Thay groupid thực tế nếu cần
+    	                    )
+    	                )
+    	                .put("templates", new JSONArray()
+    	                    .put(new JSONObject()
+    	                        .put("templateid", "10249") // Thay templateid thực tế nếu cần
+    	                    )
+    	                )
+    	            );
+    	  
+    	//Gửi request
+    	 JSONObject jsonResponse = null;
+  		try {
+  			jsonResponse = Item_get.getInstance().sendRequest(request);
+  		} catch (IOException e) {
+  			// TODO Auto-generated catch block
+  			e.printStackTrace();
+  		}
+  		try {
+	  		JSONObject result =  jsonResponse.getJSONObject("result");
+
+	  		return "Thêm host thành công";  
+  		}catch (Exception e) {
+			// TODO: handle exception
+  			//Bắt ngoại lệ khi json trả về lỗi
+  			return "Lỗi: " + jsonResponse.getJSONObject("error").optString("data");
+		}
+    }
     
     // Lấy thông tin các host hiện có
     public List<Host> getHosts(String authToken)  {
@@ -104,14 +299,15 @@ public class Host_CRUD {
         List<Host> rs = new ArrayList<Host>() ;
         // Tạo yêu cầu JSON để lấy thông tin host
         JSONObject hostRequest = new JSONObject()
-            .put("jsonrpc", "2.0")
-            .put("method", "host.get")
-            .put("params", new JSONObject()
-                .put("output", new JSONArray(Arrays.asList("hostid", "host"))
-                		)
-            		)
-            .put("auth", authToken)
-            .put("id", 1);
+        	    .put("jsonrpc", "2.0")
+        	    .put("method", "host.get")
+        	    .put("params", new JSONObject()
+        	        .put("output", new JSONArray().put("hostid").put("host").put("description")) // Danh sách trường cần trả về
+        	        .put("selectHostGroups", new JSONArray().put("groupid").put("name")) // Thông tin nhóm cần lấy
+        	    )
+        	    .put("auth", authToken) // Token xác thực
+        	    .put("id", 1); // ID của request
+
 
         JSONObject jsonResponse = null;
 		try {
@@ -130,6 +326,11 @@ public class Host_CRUD {
         	JSONObject jsonob = jsonarr.getJSONObject(i);
         	String hostid = jsonob.optString("hostid", "");
         	String hostname = jsonob.optString("host", "");
+        	String decript = jsonob.optString("description", "");
+        	
+        	JSONArray jarr = jsonob.getJSONArray("hostgroups");
+        	String groupname = jarr.getJSONObject(0).getString("name");
+        	String groupid = jarr.getJSONObject(0).getString("groupid");
         	
         	//Lấy thông tin SNMP
         	JSONObject SNMP = getConfig(hostid, authToken);
@@ -143,13 +344,14 @@ public class Host_CRUD {
 	        JSONObject detail = SNMP.getJSONObject("details");
 	        String community = detail.optString("community", "N/A");
 	        String version = detail.optString("version", "1");
-	        rs.add(new Host(hostname, hostid, IP, available, community, version));
+	        
+	        rs.add(new Host(hostname, hostid, groupid, groupname , IP, available, community, version, decript));
         }
         
         return rs;
     }
     
-    //Lấy thông tin cấu hình của 1 host
+    //Lấy thông tin cấu hình SNMP của 1 host
     public JSONObject getConfig(String hostid, String authToken) {
     	//Tạo yêu cầu để lấy thông tin IP, community, avable của host
 		JSONObject request = new JSONObject()
@@ -176,7 +378,8 @@ public class Host_CRUD {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.print(jsonResponseInterface + "\t");
+		
+		//Kiểm tra và trả về
 		if(jsonResponseInterface != null && jsonResponseInterface.has("result") && jsonResponseInterface.getJSONArray("result").length() > 0)
 			return jsonResponseInterface.getJSONArray("result").getJSONObject(0);
 		else return null;
