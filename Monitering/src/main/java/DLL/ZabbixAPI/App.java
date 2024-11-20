@@ -1,4 +1,4 @@
-package Models.ZabbixAPI;
+package DLL.ZabbixAPI;
 
 /**
  * Hello world!

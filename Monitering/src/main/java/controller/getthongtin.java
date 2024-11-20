@@ -1,16 +1,14 @@
 package controller;
 
 import java.io.IOException;
+
 import java.util.List;
 
+import DLL.ZabbixAPI.getInfor;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import Model.devide;
-import Models.ZabbixAPI.DiskInfo;
-import Models.ZabbixAPI.getInfor;
 
 /**
  * Servlet implementation class getthongtin
@@ -53,7 +51,7 @@ public class getthongtin extends HttpServlet {
             String Time_network= getInfor.getInstance().getTime_network(host);
             
             //Các ổ đĩa
-            List<DiskInfo> disk = getInfor.getInstance().getDiskInfo(host);
+            List<Disk> disk = getInfor.getInstance().getDiskInfo(host);
             
 			devide dv=new devide(host,"hoa", nameDevice, RAM, CPU, Receive, Send, RAM, RAM_used, RAM_util, Time_hardware, disk);
 			request.setAttribute("data", dv);
