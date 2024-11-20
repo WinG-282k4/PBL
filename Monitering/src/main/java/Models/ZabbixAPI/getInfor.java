@@ -63,7 +63,7 @@ public class getInfor {
 	            System.out.print("RAM-used: " + getInfor.getInstance().getRAMInfo_used(host) + "\n");
 	            System.out.print("RAM-util: " + getInfor.getInstance().getRAMInfo_util(host) + "\n");
 	            
-	            //Thời gian sử dụng
+	            //Th�?i gian sử dụng
 	            System.out.print("Time(hardware): " + getInfor.getInstance().getTime_hardware(host) + "\n");
 	            System.out.print("Time(network): " + getInfor.getInstance().getTime_network(host) + "\n");
 	            
@@ -86,8 +86,8 @@ public class getInfor {
         
     }
     
-    public String testgetSNMP(String hostId, String key, String authToken) throws IOException {
-        String discoveryRuleId ;
+    public String testgetSNMP(final String hostId, String key, String authToken) throws IOException {
+        final String discoveryRuleId ;
 
         // Step 1: Tìm rule ID của discovery rule
         JSONObject json = new JSONObject();
@@ -143,7 +143,7 @@ public class getInfor {
 
     
  // Lấy thông tin ổ đĩa
-    List<DiskInfo> getDiskInfo(String hostId) throws Exception {
+    public List<DiskInfo> getDiskInfo(String hostId) throws Exception {
         JSONObject request = new JSONObject();
         request.put("jsonrpc", "2.0");
         request.put("method", "item.get");
@@ -164,7 +164,7 @@ public class getInfor {
             String diskName = item.getString("name");
             String lastValueStr = item.optString("lastvalue", ""); // Lấy giá trị lastvalue
 
-            // Bỏ qua mục không cần thiết
+            // B�? qua mục không cần thiết
             if (diskName.contains("Windows: SNMP walk mounted filesystems")) {
                 continue;
             }
@@ -184,15 +184,15 @@ public class getInfor {
                         // Giá trị là dung lượng, chia cho 1024^3 để chuyển đổi thành GB
                         double lastValue = Double.parseDouble(lastValueStr); // Chuyển đổi sang double
                         lastValueInGB = lastValue / (1024 * 1024 * 1024); // Chia để chuyển đổi thành GB
-                        lastValueOutput = String.format("%.2f GB", lastValueInGB); // Định dạng giá trị ra 2 chữ số thập phân
+                        lastValueOutput = String.format("%.2f GB", lastValueInGB); // �?ịnh dạng giá trị ra 2 chữ số thập phân
                     }
                 } catch (NumberFormatException e) {
-                    // Bỏ qua các lỗi khi phân tích giá trị
-                    continue; // Bỏ qua nếu có lỗi
+                    // B�? qua các lỗi khi phân tích giá trị
+                    continue; // B�? qua nếu có lỗi
                 }
             } else {
                 System.out.println("Last value is empty for disk: " + diskName);
-                continue; // Bỏ qua nếu giá trị trống
+                continue; // B�? qua nếu giá trị trống
             }
 
             // Thêm thông tin ổ đĩa vào danh sách
@@ -210,7 +210,7 @@ public class getInfor {
     	return Item_get.getIntance().getInfor(hostId, "system.name", authToken);
     }
     
-  //Thời gian sử dụng mang
+  //Th�?i gian sử dụng mang
     public String getTime_network(String hostId) throws Exception {
     	String uptimeInSeconds = Item_get.getIntance().getInfor(hostId,"system.net.uptime" , authToken);
     	long seconds = Long.parseLong(uptimeInSeconds);
@@ -222,7 +222,7 @@ public class getInfor {
         return String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
     }
     
-    //Thời gian sử dụng máy
+    //Th�?i gian sử dụng máy
     public String getTime_hardware(String hostId) throws Exception {
     	String uptimeInSeconds = Item_get.getIntance().getInfor(hostId,"system.hw.uptime" , authToken);
     	long seconds = Long.parseLong(uptimeInSeconds);
@@ -257,7 +257,7 @@ public class getInfor {
             os.flush();
         }
 
-        // Đọc phản hồi từ Zabbix
+        // �?�?c phản hồi từ Zabbix
         String response;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             response = br.readLine();
@@ -290,7 +290,7 @@ public class getInfor {
             os.flush();
         }
 
-        // Đọc phản hồi từ Zabbix
+        // �?�?c phản hồi từ Zabbix
         String response;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             response = br.readLine();
@@ -320,7 +320,7 @@ public class getInfor {
         // Chuyển đổi byte sang GB
         double ramInGB = Double.parseDouble(ramValue) / (1024 * 1024 * 1024);
         
-        // Định dạng thành chuỗi với 2 chữ số thập phân
+        // �?ịnh dạng thành chuỗi với 2 chữ số thập phân
         return String.format("%.2f GB", ramInGB);
         
     }
@@ -332,7 +332,7 @@ public class getInfor {
         // Chuyển đổi byte sang GB
         double ramInGB = Double.parseDouble(ramValue) / (1024 * 1024 * 1024);
         
-        // Định dạng thành chuỗi với 2 chữ số thập phân
+        // �?ịnh dạng thành chuỗi với 2 chữ số thập phân
         return String.format("%.2f GB", ramInGB);
 
     }
@@ -343,7 +343,7 @@ public class getInfor {
     	 // Chuyển đổi byte sang GB
         double ramInGB = Double.parseDouble(ramValue);
         
-        // Định dạng thành chuỗi với 2 chữ số thập phân
+        // �?ịnh dạng thành chuỗi với 2 chữ số thập phân
         return String.format("%.2f%%", ramInGB);
     }
     
@@ -366,7 +366,7 @@ public class getInfor {
             os.flush();
         }
 
-        // Đọc phản hồi
+        // �?�?c phản hồi
         StringBuilder response = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             String line;
@@ -393,7 +393,7 @@ public class getInfor {
 //    	    put("id", 1);
 //    	}};
 //
-//        // Đọc phản hồi từ Zabbix
+//        // �?�?c phản hồi từ Zabbix
 //        String response = getInstance().sendRequest(itemRequest);
 //
 //        JSONObject jsonResponse = new JSONObject(response);

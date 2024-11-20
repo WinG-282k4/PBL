@@ -1,19 +1,15 @@
 package controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import Model.Disk;
+import Model.devide;
+import Models.ZabbixAPI.DiskInfo;
 import Models.ZabbixAPI.getInfor;
 
 /**
@@ -36,7 +32,32 @@ public class getthongtin extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+			String authToken = getInfor.getInstance().authenticate();
+			String host="10084";
+			getInfor.getInstance().getHosts(authToken);
+			String nameDevice=getInfor.getInstance().getName(host);
+			String CPU= getInfor.getInstance().getCpuLoad(host);
 			
+            // Lấy thông tin băng thông mạng
+            String Receive= getInfor.getInstance().getNetworkTraffic_recei(host);
+            String Send= getInfor.getInstance().getNetworkTraffic_send(host);
+            
+            
+            //Lấy thông tin RAM
+            String RAM=getInfor.getInstance().getRAMInfo_total(host);
+            String RAM_used=  getInfor.getInstance().getRAMInfo_used(host);
+            String RAM_util= getInfor.getInstance().getRAMInfo_util(host);
+            
+            //Thời gian sử dụng
+            String Time_hardware= getInfor.getInstance().getTime_hardware(host);
+            String Time_network= getInfor.getInstance().getTime_network(host);
+            
+            //Các ổ đĩa
+            List<DiskInfo> disk = getInfor.getInstance().getDiskInfo(host);
+            
+			devide dv=new devide(host,"hoa", nameDevice, RAM, CPU, Receive, Send, RAM, RAM_used, RAM_util, Time_hardware, disk);
+			request.setAttribute("data", dv);
+			request.getRequestDispatcher("index.jsp").forward(request, response);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -30,7 +30,7 @@ public class Item_get {
 	private static final String ZABBIX_API_URL = "http://10.10.2.170/zabbix/api_jsonrpc.php";
 	
 	// Lấy 1 thông tin với key
-    public String getInfor(String hostId, String key, String authToken) throws IOException {
+    public String getInfor(final String hostId, final String key, String authToken) throws IOException {
         String Value = "0";
         JSONObject json = new JSONObject();
         json.put("jsonrpc", "2.0");
@@ -60,7 +60,7 @@ public class Item_get {
         return Value;
     }
     
-    // Hàm lấy thông tin nhiều ổ đĩa theo key
+    // Hàm lấy thông tin nhi�?u ổ đĩa theo key
     public List<DiskInfo> getDiskInfoByKey(String hostId, String key, String authToken) throws Exception {
         JSONObject request = new JSONObject();
         request.put("jsonrpc", "2.0");
@@ -103,7 +103,7 @@ public class Item_get {
             os.flush();
         }
 
-        // Đọc phản hồi
+        // �?�?c phản hồi
         StringBuilder response = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             String line;

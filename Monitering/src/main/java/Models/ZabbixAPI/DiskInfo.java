@@ -6,7 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 // Thêm class để lưu thông tin ổ đĩa
-class DiskInfo {
+public class DiskInfo {
     String name;
     String lastValue;
 
