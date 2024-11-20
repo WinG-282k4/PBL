@@ -39,6 +39,11 @@ public class Host {
 		return Description;
 	}
 	
+	public Host(String name, String id) {
+		hostName = name;
+		hostid =id;
+	}
+	
 	public Host(String name, String id, String Group, String gname, String IP, String status, String community, String version, String Decript) {
 		// TODO Auto-generated constructor stub
 		hostName = name;
