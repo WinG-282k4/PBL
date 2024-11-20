@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class Problem {
     private String eventId;
@@ -12,17 +13,17 @@ public class Problem {
     private long clock;  // Thời gian xảy ra sự kiện
     private long ackClock;  // Thời gian khi sự kiện được ghi nhận
     private boolean acknowledged; //Đã xác nhận chưa
-    private String message;
+    private List<Acknowledge> action;// Lich su xu ly
 
     // Constructor
-    public Problem(String eventId, String name, int severity, long clock, long ackClock, boolean acknowledged, String message) {
+    public Problem(String eventId, String name, int severity, long clock, long ackClock, boolean acknowledged, List<Acknowledge> treat) {
         this.eventId = eventId;
         this.name = name;
         this.severity = severity;
         this.clock = clock;
         this.ackClock = ackClock;  // Lưu thời gian ghi nhận
         this.acknowledged = acknowledged;
-        this.message = message;
+        this.action = treat;
     }
 
     // Chuyển epoch time (giây) thành định dạng ngày tháng
@@ -67,8 +68,8 @@ public class Problem {
         return acknowledged;
     }
 
-    public String getMessage() {
-        return message;
+    public List<Acknowledge> getAction() {
+        return action;
     }
     
     public void Display() {
@@ -76,8 +77,13 @@ public class Problem {
     	    System.out.println("Name: " + getName());
     	    System.out.println("Severity: " + getSeverity());
     	    System.out.println("Time: " + getClockAsDate());
-    	    System.out.print("Time xác nhận: " + getAckClockAsDate());
+    	    System.out.print("Time xác nhận: " + getAckClockAsDate() + "\n");
     	    System.out.println("Acknowledged: " + isAcknowledged());
-    	    System.out.println("Message: " + getMessage());
+    	    System.out.print("History: \n");
+    	    for( Acknowledge ac : action) {
+    	    	System.out.print("Time: " + ac.getFormattedTime() + "\t");
+    	    	System.out.print("User: " + ac.getUser()+ "\t");
+    	    	System.out.print("Message: " + ac.getMessage());
+    	    }
     }
 }

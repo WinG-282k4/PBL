@@ -39,7 +39,7 @@ public class Host_CRUD {
 		String token = Item_get.getInstance().authenticate("Admin", "zabbix");
 		
 //		Host temp = new Host("Thanh_Laptop", "10639", "22", "  ", "192.168.0.145", " ", "password", "2", "Test tạo host 1");
-		Host temp = new Host("Thanh_Laptop", "10639", "22", "  ", "10.10.28.174", " ", "password", "2", "Laptop của Thanh");
+		Host temp = new Host("Thanh_Laptop", "10639", "22", "  ", "10.10.50.45", " ", "password", "2", "Laptop của Thanh");
 //		getInstance().getTemplates(token, Item_get.getInstance().getURL());
 		
 //		//Tạo host

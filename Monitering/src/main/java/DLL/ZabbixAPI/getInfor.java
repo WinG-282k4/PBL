@@ -161,8 +161,8 @@ public class getInfor {
     	
     }
         
- // Lấy thông tin ổ đĩa
-    List<Disk> getDiskInfo(String hostId) throws Exception {
+    // Lấy thông tin ổ đĩa
+    public List<Disk> getDiskInfo(String hostId) throws Exception {
         return Item_get.getInstance().getDiskInfo(hostId, authToken);
     }
     
