@@ -2,7 +2,9 @@ package DLL.ZabbixAPI;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,6 +30,9 @@ public class Event {
 	public static void main(String[] args) {
 		String token = Item_get.getInstance().authenticate("Admin", "zabbix");
 		List<Problem> rs ;
+		
+		//Test xác nhận problem
+		getInstance().acknowledgeProblem(token, "816", 2, "Đã sửa", true);
 		
 		rs = getInstance().getProblems(token);
 		for( Problem pr : rs) {
@@ -85,22 +90,28 @@ public class Event {
 	                JSONArray acknowledges = obj.getJSONArray("acknowledges");
 	                for (int j = 0; j < acknowledges.length(); j++) {
 	                    JSONObject ack = acknowledges.getJSONObject(j);
-	                    String user = ack.optString("alias", "Unknown");
 	                    String message = ack.optString("message", "No message");
 	                    long ackTime = ack.getLong("clock");
+	                    String old_severity = ack.optString("old_severity", "0");
+	                    String new_severity = ack.optString("new_severity", "0");
 
 	                    // Cập nhật ackClock nếu acknowledge mới nhất
-	                    if (ackClock < ackTime) {
+	                    if (ackClock < ackTime && ackTime != 0) {
 	                        ackClock = ackTime;
 	                    }
 
 	                    // Thêm acknowledge vào danh sách
-	                    actions.add(new Acknowledge(message, ackTime, user));
+	                    actions.add(new Acknowledge(message, ackTime, old_severity, new_severity));
 	                }
 	            }
-
+	            
+	            // Lấy thông tin host từ ênt
+	            Map<String, String> h = getHostFromEvent(authToken, eventId);
+	            String hostId = h.get("hostid");
+	            String hostName = h.get("hostname");
+	            
 	            // Thêm problem vào danh sách
-	            problems.add(new Problem(eventId, name, severity, clock, ackClock, authacknowledged, actions));
+	            problems.add(new Problem(eventId, name, hostId, hostName, severity, clock, ackClock, authacknowledged, actions));
 	        }
 
 	    } catch (Exception e) {
@@ -109,7 +120,90 @@ public class Event {
 
 	    return problems;
 	}
+	
+	//Hàm lấy host xảy ra problem
+	public Map<String, String> getHostFromEvent(String authToken, String eventId) {
+	    Map<String, String> hostInfo = new HashMap<>(); // Lưu hostid và hostname
+
+	    try {
+	        // Tạo JSON request cho API event.get
+	        JSONObject hostRequest = new JSONObject()
+	                .put("jsonrpc", "2.0")
+	                .put("method", "event.get")
+	                .put("id", 2)
+	                .put("auth", authToken)
+	                .put("params", new JSONObject()
+	                        .put("eventids", eventId)
+	                        .put("selectHosts", new JSONArray()
+	                                .put("hostid")
+	                                .put("host")
+	                        )
+	                        .put("output", "extend")
+	                );
+
+	        // Gửi yêu cầu đến API
+	        JSONObject hostResponse = Item_get.getInstance().sendRequest(hostRequest);
+	        JSONArray hostResults = hostResponse.optJSONArray("result");
+
+	        // Kiểm tra và trích xuất thông tin host
+	        if (hostResults != null && hostResults.length() > 0) {
+	            JSONObject hostObj = hostResults.getJSONObject(0);
+	            if (hostObj.has("hosts")) {
+	                JSONArray hosts = hostObj.getJSONArray("hosts");
+	                if (hosts.length() > 0) {
+	                    JSONObject host = hosts.getJSONObject(0);
+	                    hostInfo.put("hostid", host.optString("hostid", ""));
+	                    hostInfo.put("hostname", host.optString("host", ""));
+	                }
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return hostInfo;
+	}
 
 
+	//Hàm cập nhập probem bằn cách thêm một action gồm thay đổi cảnh báo bảo mật, xác nhận vấn đề, message
+	public void updateProblem(String token, String eventId ) {
+		
+	}
+	
+	//Hàm cập nhập xác nhận vấn đề
+	public void acknowledgeProblem(String token, String eventId, int severity, String message, boolean ack) {
+		int action;
+		if(ack) action = 14;
+		else action = 28;
+		
+		 try {
+		        // Tạo JSON request để xác nhận sự kiện
+		        JSONObject request = new JSONObject()
+		                .put("jsonrpc", "2.0")
+		                .put("method", "event.acknowledge")
+		                .put("id", 6)
+		                .put("auth", token)
+		                .put("params", new JSONObject()
+		                        .put("eventids", new JSONArray().put(eventId)) // Sự kiện cần xác nhận
+		                        .put("action", action)
+		                        .put("message", message) // Thông điệp xác nhận
+		                        .put("severity", severity)
+		                        
+		                );
+
+		        // Gửi request đến API
+		        JSONObject response = Item_get.getInstance().sendRequest(request);
+
+		        // Kiểm tra kết quả trả về từ API
+		        if (response.has("result")) {
+		            System.out.println(response);
+		            
+		        } else {
+		            System.err.println(response);
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+	}
 
 }

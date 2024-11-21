@@ -7,12 +7,16 @@ import java.util.Date;
 public class Acknowledge {
     private String message;
     private long clock;
-    private String user;
+    private String old_severity;
+    private String new_severity;
+    
+    
 
-    public Acknowledge(String message, long clock, String user) {
+    public Acknowledge(String message, long clock, String _old, String _new) {
         this.message = message;
         this.clock = clock;
-        this.user = user;
+        this.old_severity = _old;
+        this.new_severity = _new;
     }
 
     public String getMessage() {
@@ -22,9 +26,14 @@ public class Acknowledge {
     public long getClock() {
         return clock;
     }
-
-    public String getUser() {
-        return user;
+    
+    public String get_old() {
+    	return old_severity;
+    	
+    }
+    
+    public String get_new() {
+    	return new_severity;
     }
 
     public String getFormattedTime() {
