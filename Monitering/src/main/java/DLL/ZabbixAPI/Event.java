@@ -32,7 +32,7 @@ public class Event {
 		List<Problem> rs ;
 		
 		//Test xác nhận problem
-		getInstance().acknowledgeProblem(token, "816", 2, "Đã sửa", true);
+//		getInstance().updateProblem(token, "816", 2, "Đã sửa", true);
 		
 		rs = getInstance().getProblems(token);
 		for( Problem pr : rs) {
@@ -58,6 +58,7 @@ public class Event {
 	                            .put("severity")
 	                            .put("clock")
 	                            .put("acknowledged")
+	                            .put("suppressed") // Thêm trường trạng thái
 	                    )
 	                    .put("selectAcknowledges", "extend") // Lấy acknowledge đầy đủ
 	                    .put("sortfield", "eventid")          // Sắp xếp theo thời gian
@@ -73,15 +74,18 @@ public class Event {
 	        // Duyệt qua từng problem
 	        for (int i = 0; i < results.length(); i++) {
 	            JSONObject obj = results.getJSONObject(i);
-
+	            
+	            //Lấy các thông tin về event(problem)
 	            String eventId = obj.getString("eventid");
 	            String name = obj.getString("name");
+	            int status = obj.getInt("suppressed");
 	            int severity = obj.getInt("severity");
 	            long clock = obj.getLong("clock");
 	            String acknowledged = obj.getString("acknowledged");
 	            Boolean authacknowledged = false;
 	            if(acknowledged.equals("1")) authacknowledged = true;
 	            
+	            //Thời gian xác nhận mặc định bằng 0 - chưa đc xác nhận
 	            long ackClock = 0;
 
 	            // Lấy danh sách acknowledge
@@ -95,7 +99,7 @@ public class Event {
 	                    String old_severity = ack.optString("old_severity", "0");
 	                    String new_severity = ack.optString("new_severity", "0");
 
-	                    // Cập nhật ackClock nếu acknowledge mới nhất
+	                    // Cập nhật ackClock nếu event đã xác nhận
 	                    if (ackClock < ackTime && ackTime != 0) {
 	                        ackClock = ackTime;
 	                    }
@@ -111,7 +115,7 @@ public class Event {
 	            String hostName = h.get("hostname");
 	            
 	            // Thêm problem vào danh sách
-	            problems.add(new Problem(eventId, name, hostId, hostName, severity, clock, ackClock, authacknowledged, actions));
+	            problems.add(new Problem(eventId, name, status, hostId, hostName, severity, clock, ackClock, authacknowledged, actions));
 	        }
 
 	    } catch (Exception e) {
@@ -163,15 +167,9 @@ public class Event {
 
 	    return hostInfo;
 	}
-
-
-	//Hàm cập nhập probem bằn cách thêm một action gồm thay đổi cảnh báo bảo mật, xác nhận vấn đề, message
-	public void updateProblem(String token, String eventId ) {
-		
-	}
 	
-	//Hàm cập nhập xác nhận vấn đề
-	public void acknowledgeProblem(String token, String eventId, int severity, String message, boolean ack) {
+	//Hàm cập nhập xác nhận vấn đề (cập nhập, thay đổi, xác nhận và thêm message
+	public void updateProblem(String token, String eventId, int severity, String message, boolean ack) {
 		int action;
 		if(ack) action = 14;
 		else action = 28;
@@ -204,6 +202,39 @@ public class Event {
 		    } catch (Exception e) {
 		        e.printStackTrace();
 		    }
+	}
+	
+	//Hàm đóng vấn đề (Có thể ko đóng đc)
+	public String closeProblem(String token, String eventId) {		
+		String rs = null;
+		 try {
+		        // Tạo JSON request để xác nhận sự kiện
+		        JSONObject request = new JSONObject()
+		                .put("jsonrpc", "2.0")
+		                .put("method", "event.acknowledge")
+		                .put("id", 6)
+		                .put("auth", token)
+		                .put("params", new JSONObject()
+		                        .put("eventids", new JSONArray().put(eventId)) // Sự kiện cần xác nhận
+		                        .put("action", 1)
+
+		                        
+		                );
+
+		        // Gửi request đến API
+		        JSONObject response = Item_get.getInstance().sendRequest(request);
+
+		        // Kiểm tra kết quả trả về từ API
+		        if (response.has("result")) {
+		            rs = "Đã đóng vấn đề";
+		            
+		        } else {
+		        	rs = "Lỗi: " + response.getJSONObject("error").optString("data");
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		return rs;
 	}
 
 }
