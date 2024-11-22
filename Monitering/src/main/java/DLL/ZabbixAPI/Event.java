@@ -1,6 +1,10 @@
 package DLL.ZabbixAPI;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +36,12 @@ public class Event {
 		List<Problem> rs ;
 		
 		//Test xác nhận problem
-//		getInstance().updateProblem(token, "816", 2, "Đã sửa", true);
+//									(token, eventid, severity, mesage, acknowledge)
+//		getInstance().updateProblem(token, "2189", 1, "Đổi mạng vẫn ko ping đc, do máy", false);
+		
+		//Test đóng problem
+//		String result = getInstance().closeProblem(token, "2189");
+//		System.out.print(result);
 		
 		rs = getInstance().getProblems(token);
 		for( Problem pr : rs) {
@@ -47,28 +56,31 @@ public class Event {
 
 	    // Tạo JSON request
 	    JSONObject request = new JSONObject()
-	            .put("jsonrpc", "2.0")
-	            .put("method", "problem.get")
-	            .put("id", 1)
-	            .put("auth", authToken)
-	            .put("params", new JSONObject()
-	                    .put("output", new JSONArray() // Lấy các trường cần thiết
-	                            .put("eventid")
-	                            .put("name")
-	                            .put("severity")
-	                            .put("clock")
-	                            .put("acknowledged")
-	                            .put("suppressed") // Thêm trường trạng thái
-	                    )
-	                    .put("selectAcknowledges", "extend") // Lấy acknowledge đầy đủ
-	                    .put("sortfield", "eventid")          // Sắp xếp theo thời gian
-	                    .put("sortorder", "DESC")           // Theo thứ tự giảm dần
-	            );
+	    	    .put("jsonrpc", "2.0")
+	    	    .put("method", "problem.get")
+	    	    .put("id", 1)
+	    	    .put("auth", authToken)
+	    	    .put("params", new JSONObject()
+	    	        .put("output", new JSONArray()
+	    	            .put("eventid")
+	    	            .put("name")
+	    	            .put("clock")
+	    	            .put("severity")
+	    	            .put("acknowledged")
+	    	        		)
+	    	        .put("source", 0) // Chỉ lấy các sự kiện liên quan đến trigger
+	    	        .put("object", 0) // Liên kết với trigger
+	    	        .put("sortfield", "eventid") // Sắp xếp theo thời gian
+	    	        .put("sortorder", "DESC") // Mới nhất trước
+	    	        .put("suppressed",false)
+	    	    		
+	    	    		);
+
 
 	    try {
 	        // Gửi request
 	        JSONObject jsonResponse = Item_get.getInstance().sendRequest(request);
-	        System.out.print(jsonResponse + "\n");
+
 	        JSONArray results = jsonResponse.getJSONArray("result");
 	        
 	        // Duyệt qua từng problem
@@ -78,36 +90,30 @@ public class Event {
 	            //Lấy các thông tin về event(problem)
 	            String eventId = obj.getString("eventid");
 	            String name = obj.getString("name");
-	            int status = obj.getInt("suppressed");
 	            int severity = obj.getInt("severity");
-	            long clock = obj.getLong("clock");
+	            long L_clock = obj.getLong("clock");
 	            String acknowledged = obj.getString("acknowledged");
 	            Boolean authacknowledged = false;
 	            if(acknowledged.equals("1")) authacknowledged = true;
 	            
 	            //Thời gian xác nhận mặc định bằng 0 - chưa đc xác nhận
-	            long ackClock = 0;
+	            long L_ackClock = 0;
 
 	            // Lấy danh sách acknowledge
-	            List<Acknowledge> actions = new ArrayList<>();
-	            if (obj.has("acknowledges")) {
-	                JSONArray acknowledges = obj.getJSONArray("acknowledges");
-	                for (int j = 0; j < acknowledges.length(); j++) {
-	                    JSONObject ack = acknowledges.getJSONObject(j);
-	                    String message = ack.optString("message", "No message");
-	                    long ackTime = ack.getLong("clock");
-	                    String old_severity = ack.optString("old_severity", "0");
-	                    String new_severity = ack.optString("new_severity", "0");
-
-	                    // Cập nhật ackClock nếu event đã xác nhận
-	                    if (ackClock < ackTime && ackTime != 0) {
-	                        ackClock = ackTime;
-	                    }
-
-	                    // Thêm acknowledge vào danh sách
-	                    actions.add(new Acknowledge(message, ackTime, old_severity, new_severity));
+	            List<Acknowledge> actions = getAction(authToken, eventId);	   
+	            
+	            for(Acknowledge at : actions) {
+	            	long ackTime = convertDateToEpoch(at.getClock());
+                // Cập nhật ackClock nếu event đã xác nhận
+	                if (L_ackClock < ackTime && ackTime != 0) {
+	                    L_ackClock = ackTime;
 	                }
 	            }
+
+	            //Chuyển định dạng clock từ long thành string
+	            String clock = convertEpochToDate(L_clock);
+	            String ackClock = "Chưa xác nhận";
+	            if(L_ackClock != 0) ackClock = convertEpochToDate(L_ackClock);
 	            
 	            // Lấy thông tin host từ ênt
 	            Map<String, String> h = getHostFromEvent(authToken, eventId);
@@ -115,7 +121,7 @@ public class Event {
 	            String hostName = h.get("hostname");
 	            
 	            // Thêm problem vào danh sách
-	            problems.add(new Problem(eventId, name, status, hostId, hostName, severity, clock, ackClock, authacknowledged, actions));
+	            problems.add(new Problem(eventId, name, hostId, hostName, severity, clock, ackClock, authacknowledged, actions));
 	        }
 
 	    } catch (Exception e) {
@@ -125,8 +131,67 @@ public class Event {
 	    return problems;
 	}
 	
+	//Lấy lịch sử hoạt động của problem
+	public List<Acknowledge> getAction(String authToken, String evenId) {
+	    List<Acknowledge> actions = new ArrayList<>();
+
+	    // Tạo JSON request
+	    JSONObject request = new JSONObject()
+	            .put("jsonrpc", "2.0")
+	            .put("method", "problem.get")
+	            .put("id", 1)
+	            .put("auth", authToken)
+	            .put("params", new JSONObject()
+	                    .put("output", new JSONArray()
+	                            .put("acknowledged")
+	                    )
+	                    .put("eventids", evenId)
+	                    .put("selectAcknowledges", "extend")
+	                    .put("sortfield", "eventid")
+	                    .put("sortorder", "DESC")
+	            );
+
+	    // Gửi request
+	    JSONObject jsonResponse = null;
+	    try {
+	        jsonResponse = Item_get.getInstance().sendRequest(request);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return actions; // Trả về danh sách rỗng nếu có lỗi
+	    }
+
+	    // Xử lý kết quả
+	    JSONArray results = jsonResponse.getJSONArray("result");
+
+	    if (results.isEmpty()) {
+	        
+	        return actions;
+	    }
+
+	    for (int i = 0; i < results.length(); i++) {
+	        JSONObject obj = results.getJSONObject(i);
+	        if (obj.has("acknowledges")) {
+	            JSONArray acknowledges = obj.getJSONArray("acknowledges");
+	            for (int j = 0; j < acknowledges.length(); j++) {
+	                JSONObject ack = acknowledges.getJSONObject(j);
+	                String message = ack.optString("message", "No message");
+	                long tempTime = Long.parseLong(ack.getString("clock"));
+	                String ackTime = convertEpochToDate(tempTime);
+	                String old_severity = ack.optString("old_severity", "0");
+	                String new_severity = ack.optString("new_severity", "0");
+
+	                // Thêm acknowledge vào danh sách
+	                actions.add(new Acknowledge(message, ackTime, old_severity, new_severity));
+	            }
+	        }
+	    }
+
+	    return actions;
+	}
+
+	
 	//Hàm lấy host xảy ra problem
-	public Map<String, String> getHostFromEvent(String authToken, String eventId) {
+ 	public Map<String, String> getHostFromEvent(String authToken, String eventId) {
 	    Map<String, String> hostInfo = new HashMap<>(); // Lưu hostid và hostname
 
 	    try {
@@ -169,8 +234,18 @@ public class Event {
 	}
 	
 	//Hàm cập nhập xác nhận vấn đề (cập nhập, thay đổi, xác nhận và thêm message
-	public void updateProblem(String token, String eventId, int severity, String message, boolean ack) {
+	public String updateProblem(String token, String eventId, int severity, String message, boolean ack) {
+		String rs = null;
 		int action;
+//		1 - close problem;
+//		2 - acknowledge event;
+//		4 - add message;
+//		8 - change severity;
+//		16 - unacknowledge event;
+//		32 - suppress event;
+//		64 - unsuppress event;
+//		128 - change event rank to cause;
+//		256 - change event rank to symptom.
 		if(ack) action = 14;
 		else action = 28;
 		
@@ -194,17 +269,18 @@ public class Event {
 
 		        // Kiểm tra kết quả trả về từ API
 		        if (response.has("result")) {
-		            System.out.println(response);
+		            rs =  "Update problem thành công";
 		            
 		        } else {
-		            System.err.println(response);
+		            rs ="Lỗi: " + response.getJSONObject("error").optString("data");
 		        }
 		    } catch (Exception e) {
 		        e.printStackTrace();
 		    }
+		 return rs;
 	}
 	
-	//Hàm đóng vấn đề (Có thể ko đóng đc)
+	//Hàm đóng vấn đề (Có thể ko đóng đc), xem như đã giải quyết
 	public String closeProblem(String token, String eventId) {		
 		String rs = null;
 		 try {
@@ -236,5 +312,20 @@ public class Event {
 		    }
 		return rs;
 	}
+	
+    // Chuyển epoch time (giây) thành định dạng ngày tháng
+    public String convertEpochToDate(long epochTime) {
+        Instant instant = Instant.ofEpochSecond(epochTime);
+        LocalDateTime dateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return dateTime.format(formatter);
+    }
+    
+ // Chuyển ngày tháng (String) thành epoch time (giây)
+    public long convertDateToEpoch(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(dateString, formatter);
+        return dateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
+    }
 
 }

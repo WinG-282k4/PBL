@@ -6,13 +6,13 @@ import java.util.Date;
 //Lớp ghi lại quá trình xác minh vấn đề
 public class Acknowledge {
     private String message;
-    private long clock;
+    private String clock;
     private String old_severity;
     private String new_severity;
     
     
 
-    public Acknowledge(String message, long clock, String _old, String _new) {
+    public Acknowledge(String message, String clock, String _old, String _new) {
         this.message = message;
         this.clock = clock;
         this.old_severity = _old;
@@ -23,7 +23,7 @@ public class Acknowledge {
         return message;
     }
 
-    public long getClock() {
+    public String getClock() {
         return clock;
     }
     
@@ -36,9 +36,5 @@ public class Acknowledge {
     	return new_severity;
     }
 
-    public String getFormattedTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(new Date(clock * 1000));
-    }
 }
 
