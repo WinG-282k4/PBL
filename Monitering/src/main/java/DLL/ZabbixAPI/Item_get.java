@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import Model.Disk;
+import Model.Item;
 import io.github.hengyunabc.zabbix.api.ZabbixApi;
 
 public class Item_get {
@@ -30,10 +31,10 @@ public class Item_get {
 		return instance;
 	}
 	
-//	private static String ZABBIX_API_URL = "http://192.168.0.69/zabbix/api_jsonrpc.php";
+	private static String ZABBIX_API_URL = "http://192.168.0.69/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.29.193/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.59.231/zabbix/api_jsonrpc.php";
-	private static String ZABBIX_API_URL = "http://10.10.50.254/zabbix/api_jsonrpc.php";
+//	private static String ZABBIX_API_URL = "http://10.10.50.254/zabbix/api_jsonrpc.php";
 	
 	//IP server zabbix	
 	public void setURL(String URL) {
@@ -75,16 +76,18 @@ public class Item_get {
     }
     
 	// Lấy 1 thông tin với key
-    public String getInfor(String hostId, String key, String authToken) throws IOException {
-        String Value = "0";
+    public Item getInfor(String hostId, String key, String authToken) throws IOException {
+        Item rs = null;
         
         JSONArray resultArray =  getJSONresponse(hostId, "item.get", key, authToken);
-        
+
         for (int i = 0; i < resultArray.length(); i++) {
-            Value = resultArray.getJSONObject(i).optString("lastvalue", "0");
+            String Value = resultArray.getJSONObject(i).optString("lastvalue", "0");
+            String itemId = resultArray.getJSONObject(i).optString("itemid", "unknown");
+            rs = new Item(itemId, Value);
             if (!Value.equals("0")) break;
         }
-        return Value;
+        return rs;
     }
     
     // Hàm lấy thông tin nhiều ổ 
