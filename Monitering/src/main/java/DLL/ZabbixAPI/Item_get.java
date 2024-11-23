@@ -31,7 +31,9 @@ public class Item_get {
 	}
 	
 //	private static String ZABBIX_API_URL = "http://192.168.0.69/zabbix/api_jsonrpc.php";
-	private static String ZABBIX_API_URL = "http://10.10.29.193/zabbix/api_jsonrpc.php";
+//	private static String ZABBIX_API_URL = "http://10.10.29.193/zabbix/api_jsonrpc.php";
+//	private static String ZABBIX_API_URL = "http://10.10.59.231/zabbix/api_jsonrpc.php";
+	private static String ZABBIX_API_URL = "http://10.10.50.254/zabbix/api_jsonrpc.php";
 	
 	//IP server zabbix	
 	public void setURL(String URL) {
@@ -148,17 +150,17 @@ public class Item_get {
     public JSONArray getJSONresponse(String hostId, String method, String key, String authToken) throws IOException {
         String Value = "0";
         JSONObject json = new JSONObject();
-        json.put("jsonrpc", "2.0");
-        json.put("method", method);
-        json.put("params", new JSONObject() {{
-            put("output", "extend");
-            put("hostids", hostId);
-            put("search", new JSONObject() {{
-                put("key_", key); // Key cho RAM
-            }});
-        }});
-        json.put("auth", authToken);
-        json.put("id", 1);
+	        json.put("jsonrpc", "2.0");
+	        json.put("method", method);
+	        json.put("params", new JSONObject() {{
+	            put("output", "extend");
+	            put("hostids", hostId);
+	            put("search", new JSONObject() {{
+	                put("key_", key); // Key cho RAM
+	            }});
+	        }});
+	        json.put("auth", authToken);
+	        json.put("id", 1);
 
         JSONObject jsonResponse = sendRequest(json);
 

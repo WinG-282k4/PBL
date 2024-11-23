@@ -38,10 +38,10 @@ public class getInfor {
     public static void main(String[] args) {
         try {
             // Xác thực và lấy token
-            authToken = Item_get.getInstance().authenticate(user, password);
-            System.out.println("Authenticated with token: " + authToken);
+            String Token = Item_get.getInstance().authenticate(user, password);
+            System.out.println("Authenticated with token: " + Token);
             
-            String host ="10640";
+            String host ="10643";
 
 //            //Name
 //        	System.out.print("Name: " + getInfor.getInstance().getName(host) + "\n");
@@ -49,7 +49,7 @@ public class getInfor {
         	
             while(true) {
             	
-            	Device demo = getInstance().getFull_Infor(host);
+            	Device demo = getInstance().getFull_Infor(host, Token);
             	demo.Display();
             	            	
 //	            // Lấy CPU load cho một host cụ thể (thay hostId bằng ID host thực tế)
@@ -93,7 +93,8 @@ public class getInfor {
     }
     
     //Hàm lấy toàn bộ thông tin của một hostid đê show lastvalue
-    public Device getFull_Infor(String hostID) {
+    public Device getFull_Infor(String hostID, String token) {
+    	setToken(token);
     	String id = hostID;
     	
     	//Khởi tạo các biến thông tin
@@ -161,8 +162,8 @@ public class getInfor {
     	
     }
         
- // Lấy thông tin ổ đĩa
-    List<Disk> getDiskInfo(String hostId) throws Exception {
+    // Lấy thông tin ổ đĩa
+    public List<Disk> getDiskInfo(String hostId) throws Exception {
         return Item_get.getInstance().getDiskInfo(hostId, authToken);
     }
     

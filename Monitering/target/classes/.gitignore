@@ -1,3 +1,8 @@
 pom.properties
+<<<<<<< HEAD
 /Model/
 /DLL/
+=======
+/DLL/
+/Model/
+>>>>>>> 7e33dc063c348ff234004369dcaf7125cb00056b
