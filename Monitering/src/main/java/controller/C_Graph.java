@@ -35,7 +35,7 @@ public class C_Graph extends HttpServlet {
         String destination = "/Graph.jsp";
 
         // Lấy các tham số từ request
-        String hostid = "10641";// = request.getParameter("hostid");
+        String hostid = request.getParameter("hostid");
         String itemid = request.getParameter("itemid");
         String disk = request.getParameter("Disk");
 
@@ -46,28 +46,13 @@ public class C_Graph extends HttpServlet {
         if (hostid != null && !hostid.isEmpty()) {
             // Lấy danh sách đồ thị cho từng item của hostid
             Map<String, String> graphData = DrawGraph.getInstance().getGraphhost(token, hostid, timeFrom, timeTill);
-            
-            System.out.print(graphData);
 
             // Truyền graphData sang JSP
             request.setAttribute("GraphData", graphData);
             
         } else if (itemid != null && !itemid.isEmpty()) {
-            List<Graph> graph = DrawGraph.getInstance().getHistoryItem(token, itemid, timeFrom, timeTill);
-            
-            // Lấy dữ liệu labels và values cho từng item
-            String labels = graph.stream()
-                                  .map(g -> "\"" + g.getLabel() + "\"")
-                                  .collect(Collectors.joining(", "));
-            String data = graph.stream()
-                                .map(g -> String.valueOf(g.getValue()))
-                                .collect(Collectors.joining(", "));
-            
-            //Tạo kết quả gửi đi
-            Map<String, String> graphData = new HashMap<>();
-            graphData.put(itemid + "_labels", labels);
-            graphData.put(itemid + "_data", data);
-            
+        	
+            Map<String, String> graphData = DrawGraph.getInstance().getGraphItem(token, itemid, timeFrom, timeTill);
             request.setAttribute("GraphData", graphData);
             
         } else if (disk != null && !disk.isEmpty()) {

@@ -104,7 +104,6 @@ public class DrawGraph {
 		int type = 0;
 		JSONArray itemid = new JSONArray().put(itemId);
 		JSONArray rs = getHistoryData(authToken, itemid, timeFrom, timeNow, type);
-		System.out.print(rs);
 		
 		List<Graph> graphList = new ArrayList<Graph>();
 		for(int i = 0; i < rs.length(); i ++ ) {
@@ -126,7 +125,6 @@ public class DrawGraph {
 			
 			type = 3;
 			rs = getHistoryData(authToken, itemid, timeFrom, timeNow, type);
-			System.out.print(rs);
 			
 			graphList = new ArrayList<Graph>();
 			for(int i = 0; i < rs.length(); i ++ ) {
@@ -138,7 +136,7 @@ public class DrawGraph {
 	
 	            // Lấy giá trị
 	            String value = entry.getString("value");
-	
+
 	            // Tạo đối tượng Graph và thêm vào danh sách
 	            Graph graph = new Graph(formattedTime, value);
 	            graphList.add(graph);
@@ -164,12 +162,13 @@ public class DrawGraph {
 	    List<Graph> resultsTimeNet = getHistoryItem(authToken, host.getTime_network().getId(), timeFrom, timeNow);
 
 	    // Thêm kết quả vào map
-	    graphMap.put("CPU", resultsCPU);
-	    graphMap.put("RAM", resultsRAM);
-	    graphMap.put("Bit Reiceive", resultsBitReceive);
-	    graphMap.put("Bit Send", resultsBitSend);
-	    graphMap.put("Time Hardware", resultsTimHard);
-	    graphMap.put("Time Network", resultsTimeNet);
+	    graphMap.put("CPU_%", resultsCPU);
+//	    graphMap.put(host.getCPU().getId(), resultsCPU);
+	    graphMap.put("RAM_%", resultsRAM);
+	    graphMap.put("Bit Reiceive_Kbps", resultsBitReceive);
+	    graphMap.put("Bit Send_Kbps", resultsBitSend);
+	    graphMap.put("Time Hardware_Second", resultsTimHard);
+	    graphMap.put("Time Network_Second", resultsTimeNet);
 
 	    return graphMap;
 	}
@@ -182,6 +181,27 @@ public class DrawGraph {
         for (Map.Entry<String, List<Graph>> entry : listGraphs.entrySet()) {
             String itemID = entry.getKey();  // Lấy item ID(Name)
             List<Graph> graphs = entry.getValue();
+            
+//            //Nếu có đợn vị là thời gian
+//            if(itemID.contains("HH:MM:SS")) {
+//            	//duyệt qua từng phần tử
+//            	for(Graph temp : graphs) {
+//            		String value = temp.getValue();
+//            		long seconds = Long.parseLong(value);
+//
+//            		// Tính toán số ngày, giờ, phút, giây
+//            		long days = seconds / (24 * 3600); // 1 ngày = 86400 giây
+//            		long hours = (seconds % (24 * 3600)) / 3600;
+//            		long minutes = (seconds % 3600) / 60;
+//            		long remainingSeconds = seconds % 60;
+//
+//            		// Định dạng lại giá trị thành ngày, giờ, phút, giây
+//            		value = String.format("%d %02d:%02d:%02d", days, hours, minutes, remainingSeconds);
+//
+//            		temp.setValue(value);
+//
+//            	}
+//            }
 
             // Lấy dữ liệu labels và values cho từng item
             String labels = graphs.stream()
@@ -190,11 +210,39 @@ public class DrawGraph {
             String data = graphs.stream()
                                 .map(g -> String.valueOf(g.getValue()))
                                 .collect(Collectors.joining(", "));
-
+            System.out.print(data);
             // Lưu labels và data theo itemID
             graphData.put(itemID + "_labels", labels);
             graphData.put(itemID + "_data", data);
         }
+        return graphData;
+	}
+	
+	public Map<String,String> getGraphItem(String token, String itemid,long timeFrom, long timeTill){
+		List<Graph> graph = DrawGraph.getInstance().getHistoryItem(token, itemid, timeFrom, timeTill);
+        
+        // Lấy dữ liệu labels và values cho từng item
+        String labels = graph.stream()
+                              .map(g -> "\"" + g.getLabel() + "\"")
+                              .collect(Collectors.joining(", "));
+        String data = graph.stream()
+                            .map(g -> String.valueOf(g.getValue()))
+                            .collect(Collectors.joining(", "));
+        
+        //Tạo kết quả gửi đi
+        String units = null;
+        String name = null;
+        try {
+        units = Item_get.getInstance().getItemUnits(token, itemid);
+        name = Item_get.getInstance().getItemName(token, itemid);
+        }catch (Exception e) {
+			// TODO: handle exception
+		}
+        
+        Map<String, String> graphData = new HashMap<>();
+        graphData.put(name + "_" + units + "_labels", labels);
+        graphData.put(name + "_" + units + "_data", data);
+        
         return graphData;
 	}
 

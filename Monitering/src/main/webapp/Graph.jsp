@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import = "java.util.List, java.util.Map" %>
+<%@ page import = "java.util.Map" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Graph Visualization</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Thêm thư viện Chart.js -->
     <style>
         canvas {
             max-width: 90%;
@@ -19,107 +19,107 @@
     <%
         // Lấy danh sách đồ thị từ request attribute
         Map<String, String> graphData = (Map<String, String>) request.getAttribute("GraphData");
-
-        if (graphData != null && !graphData.isEmpty()) {
-            out.println("<h3>Graph Data:</h3>");
-            out.println("<pre>");
-            for (Map.Entry<String, String> entry : graphData.entrySet()) {
-                out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
-            }
-            out.println("</pre>");
-        } else {
-            out.println("<p>No Graph Data found.</p>");
-        }
+    
+//    if (graphData != null && !graphData.isEmpty()) {
+//        out.println("<h3>Graph Data:</h3>");
+//        out.println("<pre>");
+//        for (Map.Entry<String, String> entry : graphData.entrySet()) {
+//            out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+//        }
+//        out.println("</pre>");
+//   } else {
+//        out.println("<p>No Graph Data found.</p>");
+//    }
     %>
-	
+
     <!-- Lặp qua tất cả các item của hostid để vẽ đồ thị -->
     <%
         String itemId = "";
         if (graphData != null && !graphData.isEmpty()) {
             for (Map.Entry<String, String> entry : graphData.entrySet()) {
-                String temp = entry.getKey().split("_")[0];
-                String labels = graphData.get(temp + "_labels");
-                String data = graphData.get(temp + "_data");
-                
-                if(temp.equals(itemId)) continue; // Nếu đã có, lấy labels
+            	String[] keypart = entry.getKey().split("_");
+                String temp = keypart[0]; // Lấy phần từ đầu tiên sau khi tách Key để lấy ID
+                String units = keypart[1]; // phần tử thứ 2 chưa đơn vị
+                String labels = graphData.get(temp + "_" + units + "_labels");
+                String data = graphData.get(temp +  "_" + units + "_data");
+
+                if (temp.equals(itemId)) continue; // Nếu đã có, bỏ qua đồ thị
                 else {
                     itemId = temp;
                 }
-                
-                String itemID = itemId.replace(" ", "_");  // Thay thế khoảng trống bằng dấu gạch dưới
 
-    // Render đồ thị cho từng item
+                String itemID = itemId.replace(" ", "_"); // Thay thế khoảng trống bằng dấu gạch dưới
+
+                // Xử lý dữ liệu labels và data thành JSON
+                labels = "[" + labels + "]"; // Thêm dấu ngoặc để JSON hợp lệ
+                data = "[" + data + "]"; // Thêm dấu ngoặc để JSON hợp lệ
     %>
-    
-    <h2>Graph for Item: <%= itemId %></h2>
-//run
-    <canvas id="chart-<%= itemID %>" width="800" height="400"></canvas>
-//run
-    
+
+    <h2>Graph <%= itemId %></h2>
+    <canvas id="chart-line-<%= itemID %>" width="800" height="400"></canvas>
+
     <script>
-    // Lấy dữ liệu từ JSP
-    const labelsRaw = "<%= labels %>"; // labels là chuỗi từ JSP
-    const dataRaw = "<%= data %>"; // data là chuỗi từ JSP
-    
-    // Chuyển labels từ chuỗi thành mảng Date (ISO-8601)
-    const labels = JSON.parse('[' + labelsRaw + ']').map(timeStr => {
-        return new Date('1970-01-01T' + timeStr + 'Z'); // Chuyển đổi chuỗi thời gian thành đối tượng Date
-    });
-    
-    // Chuyển data từ chuỗi thành mảng số
-    const data = JSON.parse('[' + dataRaw + ']');
-    
-    // Lấy context của canvas
-    let myChart = document.getElementById('chart-<%= itemID %>').getContext('2d');
-    
-    // Cấu hình đồ thị
-    let massPopChart = new Chart(myChart, {
-      type:'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
-      data:{
-        labels:labels,
-        datasets:[{
-          label:'%',
-          data:data,
-          //backgroundColor:'green',
-          backgroundColor:[
-            'rgba(255, 99, 132, 0.6)',
-          ],
-          borderWidth:1,
-          borderColor:'#777',
-          hoverBorderWidth:3,
-          hoverBorderColor:'#000'
-        }]
-      },
-      options:{
-        title:{
-          display:true,
-          text:'Largest Cities In Massachusetts',
-          fontSize:25
-        },
-        legend:{
-          display:true,
-          position:'right',
-          labels:{
-            fontColor:'#000'
-          }
-        },
-        layout:{
-          padding:{
-            left:50,
-            right:0,
-            bottom:0,
-            top:0
-          }
-        },
-        tooltips:{
-          enabled:true
-        }
-      }
-    });
-</script>
+        (function() {
+            // Lấy dữ liệu từ JSP
+            const unitsRaw = "<%= units %>"; // đơn vị
+            const labelsRaw = <%= labels %>; // labels là chuỗi từ JSP
+            const dataRaw = <%= data %>; // data là chuỗi từ JSP
+
+            // Chuyển đổi chuỗi labels và data thành mảng
+            const labels = labelsRaw.map(label => label.trim()); // Xóa khoảng trắng thừa
+            const data = dataRaw.map(value => parseFloat(value)); // Chuyển đổi thành số
+
+            // Lấy context của canvas
+            const ctx = document.getElementById('chart-line-<%= itemID %>').getContext('2d');
+
+            // Cấu hình đồ thị
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: unitsRaw,
+                        data: data,
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        borderWidth: 1,
+                        borderColor: '#777',
+                        hoverBorderWidth: 3,
+                        hoverBorderColor: '#000'
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Graph for Item: <%= itemId %>',
+                        fontSize: 25
+                    },
+                    legend: {
+                        display: true,
+                        position: 'right',
+                        labels: {
+                            fontColor: '#000'
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 50,
+                            right: 0,
+                            bottom: 0,
+                            top: 0
+                        }
+                    },
+                    tooltips: {
+                        enabled: true
+                    }
+                }
+            });
+        })();
+    </script>
 
     <%
             }
+        }else{
+        	//Vẽ biểu đồ tròn cho ổ đĩa
         }
     %>
 </body>

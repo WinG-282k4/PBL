@@ -212,4 +212,49 @@ public class Item_get {
 
         return result;
     }
+    
+  //Lấy đơn vị
+  	public String getItemUnits(String authToken, String itemId) throws Exception {
+  	    JSONObject request = new JSONObject();
+  	    request.put("jsonrpc", "2.0");
+  	    request.put("method", "item.get");
+  	    request.put("id", 3);
+  	    request.put("auth", authToken);
+  	    request.put("params", new JSONObject()
+  	            .put("output", new JSONArray().put("units")) // Chỉ lấy trường "units"
+  	            .put("itemids", new JSONArray().put(itemId))
+  	    );
+
+  	    JSONObject response = Item_get.getInstance().sendRequest(request);
+  	    JSONArray result = response != null ? response.optJSONArray("result") : new JSONArray();
+
+  	    // Trả về đơn vị nếu tìm thấy, ngược lại trả về "No units found"
+  	    return (result.length() > 0 && result.getJSONObject(0).has("units"))
+  	            ? result.getJSONObject(0).getString("units")
+  	            : "No units found";
+  	}
+  	
+  	//Lấy tên item
+  	
+  	public String getItemName(String authToken, String itemId) throws Exception {
+  	    // Tạo đối tượng request JSON để gửi yêu cầu
+  	    JSONObject request = new JSONObject();
+  	    request.put("jsonrpc", "2.0");
+  	    request.put("method", "item.get");
+  	    request.put("id", 3);
+  	    request.put("auth", authToken);
+  	    request.put("params", new JSONObject()
+  	            .put("output", new JSONArray().put("name")) // Chỉ lấy trường "name" cho tên item
+  	            .put("itemids", new JSONArray().put(itemId))
+  	    );
+
+  	    // Gửi yêu cầu và nhận phản hồi
+  	    JSONObject response = Item_get.getInstance().sendRequest(request);
+  	    JSONArray result = response != null ? response.optJSONArray("result") : new JSONArray();
+
+  	    // Trả về tên item nếu tìm thấy, ngược lại trả về "No item name found"
+  	    return (result.length() > 0 && result.getJSONObject(0).has("name"))
+  	            ? result.getJSONObject(0).getString("name")
+  	            : "No item name found";
+  	}
 }
