@@ -42,15 +42,15 @@ public class Device {
 		System.out.print("Name: " + Name + "\n");
 		System.out.print("ID: " + hostid + "\n");
 		System.out.print("IP: " + hostIP + "\n");
-		System.out.print("SNMP: " + SNMP.getValue() + "\n");
-		System.out.print("CPU: " + CPU.getValue() + "\n");
-		System.out.print("Bit_receive: " + bitReceive.getValue() + "\n");
-		System.out.print("Bit_send: " + bitSend.getValue() + "\n");
-		System.out.print("Ram - total: " + RAM_total.getValue() + "\n");
-		System.out.print("Ram - used : " + RAM_used.getValue() + "\n");
-		System.out.print("Ram - util: " + RAM_util.getValue() + "\n");
-		System.out.print("Time-hardware: " + Time_hardware.getValue() + "\n");
-		System.out.print("Time-network: " + Time_network.getValue() + "\n");
+		System.out.print("SNMP: " +SNMP.getId() + "\t" + SNMP.getValue() + "\n");
+		System.out.print("CPU: " + CPU.getId() + "\t" +  CPU.getValue() + "\n");
+		System.out.print("Bit_receive: " + bitReceive.getId() + "\t"+ bitReceive.getValue() + "\n");
+		System.out.print("Bit_send: " + bitSend.getId() + "\t" + bitSend.getValue() + "\n");
+		System.out.print("Ram - total: " + RAM_total.getId() + "\t" + RAM_total.getValue() + "\n");
+		System.out.print("Ram - used : " + RAM_used.getId() + "\t" + RAM_used.getValue() + "\n");
+		System.out.print("Ram - util: " + RAM_util.getId() + "\t" + RAM_util.getValue() + "\n");
+		System.out.print("Time-hardware: " + Time_hardware.getId() + "\t" + Time_hardware.getValue() + "\n");
+		System.out.print("Time-network: " + Time_network.getId() + "\t" + Time_network.getValue() + "\n");
 		
 		for(Disk D:ListDisk) {
 			System.out.print(D.name + ":\t" + D.lastValue + "\n");

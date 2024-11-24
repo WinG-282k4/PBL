@@ -31,6 +31,14 @@ public class Item_get {
 		return instance;
 	}
 	
+	private static String Token;
+	public static String getToken() {
+		return Token;
+	}
+	public static void setToken(String token) {
+		Token = token;
+	}
+
 	private static String ZABBIX_API_URL = "http://192.168.0.69/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.29.193/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.59.231/zabbix/api_jsonrpc.php";
@@ -71,6 +79,7 @@ public class Item_get {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		Token = jsonResponse.getString("result");
 
         return jsonResponse.getString("result"); // Auth token nằm trong "result"
     }
@@ -84,7 +93,9 @@ public class Item_get {
         for (int i = 0; i < resultArray.length(); i++) {
             String Value = resultArray.getJSONObject(i).optString("lastvalue", "0");
             String itemId = resultArray.getJSONObject(i).optString("itemid", "unknown");
+
             rs = new Item(itemId, Value);
+
             if (!Value.equals("0")) break;
         }
         return rs;
@@ -201,4 +212,49 @@ public class Item_get {
 
         return result;
     }
+    
+  //Lấy đơn vị
+  	public String getItemUnits(String authToken, String itemId) throws Exception {
+  	    JSONObject request = new JSONObject();
+  	    request.put("jsonrpc", "2.0");
+  	    request.put("method", "item.get");
+  	    request.put("id", 3);
+  	    request.put("auth", authToken);
+  	    request.put("params", new JSONObject()
+  	            .put("output", new JSONArray().put("units")) // Chỉ lấy trường "units"
+  	            .put("itemids", new JSONArray().put(itemId))
+  	    );
+
+  	    JSONObject response = Item_get.getInstance().sendRequest(request);
+  	    JSONArray result = response != null ? response.optJSONArray("result") : new JSONArray();
+
+  	    // Trả về đơn vị nếu tìm thấy, ngược lại trả về "No units found"
+  	    return (result.length() > 0 && result.getJSONObject(0).has("units"))
+  	            ? result.getJSONObject(0).getString("units")
+  	            : "No units found";
+  	}
+  	
+  	//Lấy tên item
+  	
+  	public String getItemName(String authToken, String itemId) throws Exception {
+  	    // Tạo đối tượng request JSON để gửi yêu cầu
+  	    JSONObject request = new JSONObject();
+  	    request.put("jsonrpc", "2.0");
+  	    request.put("method", "item.get");
+  	    request.put("id", 3);
+  	    request.put("auth", authToken);
+  	    request.put("params", new JSONObject()
+  	            .put("output", new JSONArray().put("name")) // Chỉ lấy trường "name" cho tên item
+  	            .put("itemids", new JSONArray().put(itemId))
+  	    );
+
+  	    // Gửi yêu cầu và nhận phản hồi
+  	    JSONObject response = Item_get.getInstance().sendRequest(request);
+  	    JSONArray result = response != null ? response.optJSONArray("result") : new JSONArray();
+
+  	    // Trả về tên item nếu tìm thấy, ngược lại trả về "No item name found"
+  	    return (result.length() > 0 && result.getJSONObject(0).has("name"))
+  	            ? result.getJSONObject(0).getString("name")
+  	            : "No item name found";
+  	}
 }

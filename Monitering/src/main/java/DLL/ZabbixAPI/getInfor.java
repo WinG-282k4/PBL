@@ -47,9 +47,7 @@ public class getInfor {
 //            //Name
 //        	System.out.print("Name: " + getInfor.getInstance().getName(host) + "\n");
 //        	System.out.print("IP: " + getInstance().getIP(host) + "\n");
-        	
-            while(true) {
-            	
+
             	Device demo = getInstance().getFull_Infor(host, Token);
             	demo.Display();
             	            	
@@ -80,8 +78,7 @@ public class getInfor {
 //	            //Lấy trạng thái kết nối
 //	            System.out.print("SNMP :" + getInstance().getSNMP(host) + "\n");
 	            
-	            TimeUnit.SECONDS.sleep(30);
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -260,7 +257,7 @@ public class getInfor {
         
         // Định dạng thành chuỗi với 2 chữ số thập phân
         String value = String.format("%.2f%%", ramInGB);
-        
+
         Item rs = new Item(ramValue.getId(), value);
         return rs;
     }
