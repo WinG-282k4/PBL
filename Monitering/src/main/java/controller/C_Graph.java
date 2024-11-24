@@ -1,10 +1,7 @@
 package controller;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import DLL.ZabbixAPI.DrawGraph;
 import DLL.ZabbixAPI.Item_get;
-import Model.Graph;
+import Model.Disk;
 
 @WebServlet("/C_Graph")
 public class C_Graph extends HttpServlet {
@@ -24,7 +21,7 @@ public class C_Graph extends HttpServlet {
     // Thời gian (từ - đến) để lấy dữ liệu đồ thị
     static long timeFrom = System.currentTimeMillis() / 1000 - 3600; // 1 giờ trước
     static long timeTill = System.currentTimeMillis() / 1000;        // Bây giờ
-
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
@@ -35,9 +32,9 @@ public class C_Graph extends HttpServlet {
         String destination = "/Graph.jsp";
 
         // Lấy các tham số từ request
-        String hostid = request.getParameter("hostid");
+        String hostid = "10641"; request.getParameter("hostid");
         String itemid = request.getParameter("itemid");
-        String disk = request.getParameter("Disk");
+        String disk = request.getParameter("Diskname");
 
         // Xác thực với Zabbix API
         String token = Item_get.getInstance().authenticate("Admin", "zabbix");
@@ -56,9 +53,17 @@ public class C_Graph extends HttpServlet {
             request.setAttribute("GraphData", graphData);
             
         } else if (disk != null && !disk.isEmpty()) {
-            request.setAttribute("GraphDisk", disk);
+        	
+        	String Value = request.getParameter("value");
+        	Disk diskgraph = new Disk(disk,Value);
+        	// Khởi tạo đối tượng Disk với tên ổ đĩa và phần trăm đã sử dụng(test)
+//        	Disk diskgraph = new Disk("Ổ C", "65");
+
+        	// Đặt đối tượng vào request
+        	request.setAttribute("GraphDisk", diskgraph);
+            
         } else {
-            request.setAttribute("ErrorMessage", "Không tìm thấy tham số phù hợp!");
+//            request.setAttribute("ErrorMessage", "Không tìm thấy tham số phù hợp!");
         }
 
         // Chuyển tiếp đến trang đích

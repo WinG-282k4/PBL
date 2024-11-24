@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import = "java.util.Map" %>
+<%@ page import = "java.util.Map, Model.Disk" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -56,7 +56,7 @@
     %>
 
     <h2>Graph <%= itemId %></h2>
-    <canvas id="chart-line-<%= itemID %>" width="800" height="400"></canvas>
+    <canvas id="chart-<%= itemID %>" width="800" height="400"></canvas>
 
     <script>
         (function() {
@@ -70,7 +70,7 @@
             const data = dataRaw.map(value => parseFloat(value)); // Chuyển đổi thành số
 
             // Lấy context của canvas
-            const ctx = document.getElementById('chart-line-<%= itemID %>').getContext('2d');
+            const ctx = document.getElementById('chart-<%= itemID %>').getContext('2d');
 
             // Cấu hình đồ thị
             new Chart(ctx, {
@@ -120,6 +120,56 @@
             }
         }else{
         	//Vẽ biểu đồ tròn cho ổ đĩa
+        	Disk graphDisk = (Disk) request.getAttribute("GraphDisk");
+        	String diskName = graphDisk.getName();
+        	int value =Integer.parseInt(graphDisk.getLastValue());
+        	out.println(diskName + "\t" + value);
+        	
+        	%>
+    <h2>Graph <%= diskName %></h2>
+<canvas id="chart-<%= diskName %>" width="800" height="400"></canvas>
+<script type="text/javascript">
+    (function(){
+        // Giả sử giá trị disk đã sử dụng và tên ổ đĩa từ Java
+        const diskName = "<%= diskName %>";  // Tên ổ đĩa
+        const usedPercentage = <%= value %>;  // Phần trăm đã sử dụng
+
+        // Dữ liệu cho biểu đồ tròn
+        const data = {
+            labels: ['Used', 'Free'],  // Hai phần: đã sử dụng và còn lại
+            datasets: [{
+                data: [usedPercentage, 100 - usedPercentage],  // Phần đã sử dụng và phần còn lại
+                backgroundColor: ['#FF5733', '#C0C0C0'],  // Màu sắc cho các phần
+                hoverOffset: 4
+            }]
+        };
+
+        // Cấu hình biểu đồ tròn
+        const ctx = document.getElementById('chart-<%= diskName %>').getContext('2d');  // Cập nhật ID canvas cho phù hợp
+        const myPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw + '%';  // Hiển thị phần trăm
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    })();
+</script>
+
+   <%
         }
     %>
 </body>

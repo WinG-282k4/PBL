@@ -210,7 +210,7 @@ public class DrawGraph {
             String data = graphs.stream()
                                 .map(g -> String.valueOf(g.getValue()))
                                 .collect(Collectors.joining(", "));
-            System.out.print(data);
+
             // Lưu labels và data theo itemID
             graphData.put(itemID + "_labels", labels);
             graphData.put(itemID + "_data", data);
