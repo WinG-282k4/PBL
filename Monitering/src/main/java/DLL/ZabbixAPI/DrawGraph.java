@@ -73,7 +73,6 @@ public class DrawGraph {
 	            .put("time_till", timeNow)
 	            .put("sortfield", "clock")
 	            .put("sortorder", "ASC");
-//	    		.put("limit", 20);
 
 	    // Tạo request
 	    JSONObject request = new JSONObject()

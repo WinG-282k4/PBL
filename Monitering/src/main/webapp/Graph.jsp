@@ -56,7 +56,11 @@
     %>
 
     <h2>Graph <%= itemId %></h2>
+<<<<<<< HEAD
     <canvas id="chart-<%= itemID %>" width="1800" height="400"></canvas>
+=======
+    <canvas id="chart-<%= itemID %>" width="800" height="400"></canvas>
+>>>>>>> 7f7510bdba223768531d335be39eb73f375c37d0
 
     <script>
         (function() {
@@ -127,7 +131,11 @@
         	
         	%>
     <h2>Graph <%= diskName %></h2>
+<<<<<<< HEAD
 <canvas id="chart-<%= diskName %>" width="1800" height="400"></canvas>
+=======
+<canvas id="chart-<%= diskName %>" width="800" height="400"></canvas>
+>>>>>>> 7f7510bdba223768531d335be39eb73f375c37d0
 <script type="text/javascript">
     (function(){
         // Giả sử giá trị disk đã sử dụng và tên ổ đĩa từ Java
