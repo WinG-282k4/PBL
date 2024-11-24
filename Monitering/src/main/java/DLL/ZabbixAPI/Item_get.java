@@ -31,6 +31,14 @@ public class Item_get {
 		return instance;
 	}
 	
+	private static String Token;
+	public static String getToken() {
+		return Token;
+	}
+	public static void setToken(String token) {
+		Token = token;
+	}
+
 	private static String ZABBIX_API_URL = "http://192.168.0.69/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.29.193/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.59.231/zabbix/api_jsonrpc.php";
@@ -71,6 +79,7 @@ public class Item_get {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		Token = jsonResponse.getString("result");
 
         return jsonResponse.getString("result"); // Auth token nằm trong "result"
     }
@@ -84,7 +93,9 @@ public class Item_get {
         for (int i = 0; i < resultArray.length(); i++) {
             String Value = resultArray.getJSONObject(i).optString("lastvalue", "0");
             String itemId = resultArray.getJSONObject(i).optString("itemid", "unknown");
+
             rs = new Item(itemId, Value);
+
             if (!Value.equals("0")) break;
         }
         return rs;
