@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import Model.Device;
 import Model.Disk;
+import Model.Item;
 
 //Lớp nghiệp vụ dùng để lấy các thông tin như tốc độ mạng, CPU, .. cần cho giám sát
 public class getInfor {
@@ -38,18 +39,27 @@ public class getInfor {
     public static void main(String[] args) {
         try {
             // Xác thực và lấy token
-            authToken = Item_get.getInstance().authenticate(user, password);
-            System.out.println("Authenticated with token: " + authToken);
+            String Token = Item_get.getInstance().authenticate(user, password);
+            System.out.println("Authenticated with token: " + Token);
             
+<<<<<<< HEAD
             String host ="10643";
+=======
+            String host ="10641";
+>>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 
 //            //Name
 //        	System.out.print("Name: " + getInfor.getInstance().getName(host) + "\n");
 //        	System.out.print("IP: " + getInstance().getIP(host) + "\n");
+<<<<<<< HEAD
         	
             while(true) {
             	
             	Device demo = getInstance().getFull_Infor(host, authToken);
+=======
+
+            	Device demo = getInstance().getFull_Infor(host, Token);
+>>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
             	demo.Display();
             	            	
 //	            // Lấy CPU load cho một host cụ thể (thay hostId bằng ID host thực tế)
@@ -79,8 +89,7 @@ public class getInfor {
 //	            //Lấy trạng thái kết nối
 //	            System.out.print("SNMP :" + getInstance().getSNMP(host) + "\n");
 	            
-	            TimeUnit.SECONDS.sleep(30);
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,13 +103,18 @@ public class getInfor {
     
     //Hàm lấy toàn bộ thông tin của một hostid đê show lastvalue
     public Device getFull_Infor(String hostID, String token) {
+<<<<<<< HEAD
     	getInstance().setToken(token);
+=======
+    	setToken(token);
+>>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
     	String id = hostID;
     	
     	//Khởi tạo các biến thông tin
 		String name = null;
-		String CPUload = null;
+		Item CPUload = null;
 		String IP = null;
+<<<<<<< HEAD
 		String SNMP = null;
 		String bitReceive = null;
 		String bitSend = null;
@@ -109,6 +123,16 @@ public class getInfor {
 		String RAM_util = null;
 		String Time_hardware = null;
 		String Time_network = null;
+=======
+		Item SNMP = null;
+		Item bitReceive = null;
+		Item bitSend = null;
+		Item RAM_total = null;
+		Item RAM_used = null;
+		Item RAM_util = null;
+		Item Time_hw = null;
+		Item Time_net = null;
+>>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 		List<Disk> ListDisk = null;
 		
 		//Gửi API lấy thông tin
@@ -150,8 +174,8 @@ public class getInfor {
     }
     
     //Lấy trạng thái kêt nối SNMP
-    public String getSNMP(String hostid) {
-    	String result = "";
+    public Item getSNMP(String hostid) {
+    	Item result = null;
     	try {
 			result = Item_get.getInstance().getInfor(hostid, "zabbix[host,snmp,available]", authToken);
 		} catch (IOException e) {
@@ -162,98 +186,115 @@ public class getInfor {
     	
     }
         
+<<<<<<< HEAD
  // Lấy thông tin ổ đĩa
+=======
+    // Lấy thông tin ổ đĩa
+>>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
     public List<Disk> getDiskInfo(String hostId) throws Exception {
         return Item_get.getInstance().getDiskInfo(hostId, authToken);
     }
     
     //Lấy tên trên thiết bị
     public String getName(String hostId) throws IOException {
-    	if(hostId.equals("10084")) return Item_get.getInstance().getInfor(hostId, "system.hostname", authToken);
-    	return Item_get.getInstance().getInfor(hostId, "system.name", authToken);
+    	if(hostId.equals("10084")) return Item_get.getInstance().getInfor(hostId, "system.hostname", authToken).getValue();
+    	return Item_get.getInstance().getInfor(hostId, "system.name", authToken).getValue();
     }
     
     
   //Thời gian sử dụng mang
-    public String getTime_network(String hostId) throws Exception {
-    	String uptimeInSeconds = Item_get.getInstance().getInfor(hostId,"system.net.uptime" , authToken);
-    	long seconds = Long.parseLong(uptimeInSeconds);
+    public Item getTime_network(String hostId) throws Exception {
+    	Item uptimeInSeconds = Item_get.getInstance().getInfor(hostId,"system.net.uptime" , authToken);
+    	long seconds = Long.parseLong(uptimeInSeconds.getValue());
 
         long hours = seconds / 3600;
         long minutes = (seconds % 3600) / 60;
         long remainingSeconds = seconds % 60;
-
-        return String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
+        
+        String Time = String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
+        Item rs = new Item(uptimeInSeconds.getId(), Time);
+        return rs;
     }
     
     //Thời gian sử dụng máy
-    public String getTime_hardware(String hostId) throws Exception {
-    	String uptimeInSeconds = Item_get.getInstance().getInfor(hostId,"system.hw.uptime" , authToken);
-    	long seconds = Long.parseLong(uptimeInSeconds);
+    public Item getTime_hardware(String hostId) throws Exception {
+    	Item uptimeInSeconds = Item_get.getInstance().getInfor(hostId,"system.hw.uptime" , authToken);
+    	long seconds = Long.parseLong(uptimeInSeconds.getValue());
 
         long hours = seconds / 3600;
         long minutes = (seconds % 3600) / 60;
         long remainingSeconds = seconds % 60;
 
-        return String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
+        String Time = String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
+        Item rs = new Item(uptimeInSeconds.getId(), Time);
+        return rs;
     }
 
     // Lệnh lấy % CPU load
-    public String getCpuLoad(String hostId) throws IOException {
+    public Item getCpuLoad(String hostId) throws IOException {
+    	Item rs = Item_get.getInstance().getInfor(hostId,"system.cpu.util" , authToken);
     	
-    	return Item_get.getInstance().getInfor(hostId,"system.cpu.util" , authToken) + " %";
+    	return rs;
         
     }
     
  // Lấy tốc độ bit mạng nhận
-    public String getNetworkTraffic_recei(String hostId) throws IOException {
-    	return Item_get.getInstance().getInfor(hostId,"net.if.in" , authToken) + " bps";
+    public Item getNetworkTraffic_recei(String hostId) throws IOException {
+    	Item rs = Item_get.getInstance().getInfor(hostId,"net.if.in" , authToken);
+    	return rs;
     	
     }
 
  // Lấy thông tin RAM tối đa
-    public String getRAMInfo_total(String hostId) throws IOException {
+    public Item getRAMInfo_total(String hostId) throws IOException {
     	//Tạo key
     	String key = "vm.memory.walk.data.total";
     	if(hostId.equals("10084")) key = "vm.memory.size[total]";
     	
-    	String ramValue = Item_get.getInstance().getInfor(hostId, key , authToken);
+    	Item ramValue = Item_get.getInstance().getInfor(hostId, key , authToken);
     	
         // Chuyển đổi byte sang GB
-        double ramInGB = Double.parseDouble(ramValue) / (1024 * 1024 * 1024);
+        double ramInGB = Double.parseDouble(ramValue.getValue()) / (1024 * 1024 * 1024);
         
         // Định dạng thành chuỗi với 2 chữ số thập phân
-        return String.format("%.2f GB", ramInGB);
+        String value = String.format("%.2f GB", ramInGB);
+        Item rs = new Item(ramValue.getId(), value);
+        return rs;
         
     }
     
  // Lấy thông tin RAM đã sử dụng
-    public String getRAMInfo_used(String hostId) throws IOException {
+    public Item getRAMInfo_used(String hostId) throws IOException {
     	String key = "vm.memory.used";
     	if(hostId.equals("10084")) key = "vm.memory.size[available]";
-    	String ramValue = Item_get.getInstance().getInfor(hostId, key, authToken);
+    	
+    	Item ramValue = Item_get.getInstance().getInfor(hostId, key , authToken);
     	
         // Chuyển đổi byte sang GB
-        double ramInGB = Double.parseDouble(ramValue) / (1024 * 1024 * 1024);
+        double ramInGB = Double.parseDouble(ramValue.getValue()) / (1024 * 1024 * 1024);
         
         // Định dạng thành chuỗi với 2 chữ số thập phân
-        return String.format("%.2f GB", ramInGB);
-
+        String value = String.format("%.2f GB", ramInGB);
+        Item rs = new Item(ramValue.getId(), value);
+        return rs;
     }
     
  // Lấy thông tin RAM % đang sử dụng
-    public String getRAMInfo_util(String hostId) throws IOException {
-    	String ramValue = Item_get.getInstance().getInfor(hostId, "vm.memory.util", authToken);
+    public Item getRAMInfo_util(String hostId) throws IOException {
+    	Item ramValue = Item_get.getInstance().getInfor(hostId, "vm.memory.util", authToken);
     	 // Chuyển đổi byte sang GB
-        double ramInGB = Double.parseDouble(ramValue);
+        double ramInGB = Double.parseDouble(ramValue.getValue());
         
         // Định dạng thành chuỗi với 2 chữ số thập phân
-        return String.format("%.2f%%", ramInGB);
+        String value = String.format("%.2f%%", ramInGB);
+
+        Item rs = new Item(ramValue.getId(), value);
+        return rs;
     }
     
  // Lấy tốc độ bit mạng gửi
-    public String getNetworkTraffic_send(String hostId) throws IOException {
-    	return Item_get.getInstance().getInfor(hostId,"net.if.out" , authToken) + " bps";
+    public Item getNetworkTraffic_send(String hostId) throws IOException {
+    	return Item_get.getInstance().getInfor(hostId,"net.if.out" , authToken);
     }
 
 

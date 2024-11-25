@@ -130,7 +130,6 @@ public class Host {
 	}
 	
 	public void Display() {
-		
 		System.out.print("host name: " + hostName + "\n");
 		System.out.print("ID: " + hostid + "\n");
 		System.out.print("Group: " + Groupname + "\n" );
