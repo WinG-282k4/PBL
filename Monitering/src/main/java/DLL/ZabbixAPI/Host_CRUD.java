@@ -39,14 +39,14 @@ public class Host_CRUD {
 		String token = Item_get.getInstance().authenticate("Admin", "zabbix");
 		
 //		Host temp = new Host("Thanh_Laptop", "10639", "22", "  ", "192.168.0.145", " ", "password", "2", "Test tạo host 1");
-		Host temp = new Host("Thanh_Laptop", "10639", "22", "  ", "10.10.28.174", " ", "password", "2", "Laptop của Thanh");
-//		getInstance().getTemplates(token, Item_get.getInstance().getURL());
-		
-//		//Tạo host
-//		String Create_host = getInstance().Create_Host(temp, token);
-//		System.out.print(Create_host);
-		
-		//Update 1 host
+//		Host temp = new Host("Ngoc_Laptop", "10642", "22", "  ", "10.10.56.32", " ", "password", "2", "Laptop của Ngoc");
+////		getInstance().getTemplates(token, Item_get.getInstance().getURL());
+//		
+////		//Tạo host
+////		String Create_host = getInstance().Create_Host(temp, token);
+////		System.out.print(Create_host);
+//		
+//		//Update 1 host
 //		getInstance().Update_Host(temp, token);
 	
 //		//Test xóa host

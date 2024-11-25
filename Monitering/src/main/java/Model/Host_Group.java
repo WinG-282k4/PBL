@@ -23,4 +23,23 @@ public class Host_Group {
 		name = hgname;
 		hosts = lhost;
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public List<Host> getHosts() {
+		return hosts;
+	}
+	public void setHosts(List<Host> hosts) {
+		this.hosts = hosts;
+	}
+	
 }

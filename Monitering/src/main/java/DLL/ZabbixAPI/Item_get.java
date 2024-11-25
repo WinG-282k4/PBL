@@ -31,7 +31,7 @@ public class Item_get {
 	}
 	
 //	private static String ZABBIX_API_URL = "http://192.168.0.69/zabbix/api_jsonrpc.php";
-	private static String ZABBIX_API_URL = "http://10.10.29.193/zabbix/api_jsonrpc.php";
+	private static String ZABBIX_API_URL = "http://10.10.27.71/zabbix/api_jsonrpc.php";
 	
 	//IP server zabbix	
 	public void setURL(String URL) {
@@ -56,11 +56,11 @@ public class Item_get {
                 .put("jsonrpc", "2.0")
                 .put("method", "user.login")
                 .put("params", new JSONObject()
-                        .put("username", USERNAME) // Đổi "username" thành "user" cho đúng chuẩn API của Zabbix
+                        .put("username", USERNAME) // �?ổi "username" thành "user" cho đúng chuẩn API của Zabbix
                         .put("password", PASSWORD))
                 .put("id", 1);
         
-        // Đọc phản hồi từ Zabbix
+        // �?�?c phản hồi từ Zabbix
         JSONObject jsonResponse = null;
 		try {
 			jsonResponse = Item_get.getInstance().sendRequest(authRequest);
@@ -85,7 +85,7 @@ public class Item_get {
         return Value;
     }
     
-    // Hàm lấy thông tin nhiều ổ 
+    // Hàm lấy thông tin nhi�?u ổ 
     List<Disk> getDiskInfo(String hostId, String authToken) throws Exception {
         JSONObject request = new JSONObject();
         request.put("jsonrpc", "2.0");
@@ -100,14 +100,14 @@ public class Item_get {
         JSONObject response = sendRequest(request);
         JSONArray items = new JSONObject(response.toString()).getJSONArray("result");
 
-        List<Disk> diskInfoList = new ArrayList<>();
+        List<Disk> diskInfoList = new ArrayList<Disk>();
 
         for (int i = 0; i < items.length(); i++) {
             JSONObject item = items.getJSONObject(i);
             String diskName = item.getString("name");
             String lastValueStr = item.optString("lastvalue", ""); // Lấy giá trị lastvalue
 
-            // Bỏ qua mục không cần thiết
+            // B�? qua mục không cần thiết
             if (diskName.contains("Windows: SNMP walk mounted filesystems")) {
                 continue;
             }
@@ -127,14 +127,14 @@ public class Item_get {
                         // Giá trị là dung lượng, chia cho 1024^3 để chuyển đổi thành GB
                         double lastValue = Double.parseDouble(lastValueStr); // Chuyển đổi sang double
                         lastValueInGB = lastValue / (1024 * 1024 * 1024); // Chia để chuyển đổi thành GB
-                        lastValueOutput = String.format("%.2f GB", lastValueInGB); // Định dạng giá trị ra 2 chữ số thập phân
+                        lastValueOutput = String.format("%.2f GB", lastValueInGB); // �?ịnh dạng giá trị ra 2 chữ số thập phân
                     }
                 } catch (NumberFormatException e) {
-                    // Bỏ qua các lỗi khi phân tích giá trị
-                    continue; // Bỏ qua nếu có lỗi
+                    // B�? qua các lỗi khi phân tích giá trị
+                    continue; // B�? qua nếu có lỗi
                 }
             } else {
-                continue; // Bỏ qua nếu giá trị trống
+                continue; // B�? qua nếu giá trị trống
             }
 
             // Thêm thông tin ổ đĩa vào danh sách
@@ -145,7 +145,7 @@ public class Item_get {
     }
     
     // Hàm gửi và lấy JSONArray
-    public JSONArray getJSONresponse(String hostId, String method, String key, String authToken) throws IOException {
+    public JSONArray getJSONresponse(final String hostId, String method, final String key, String authToken) throws IOException {
         String Value = "0";
         JSONObject json = new JSONObject();
         json.put("jsonrpc", "2.0");
@@ -183,7 +183,7 @@ public class Item_get {
             os.flush();
         }
 
-        // Đọc phản hồi
+        // �?�?c phản hồi
         StringBuilder response = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             String line;

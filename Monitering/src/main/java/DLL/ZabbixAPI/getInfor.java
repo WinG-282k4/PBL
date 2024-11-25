@@ -41,7 +41,7 @@ public class getInfor {
             authToken = Item_get.getInstance().authenticate(user, password);
             System.out.println("Authenticated with token: " + authToken);
             
-            String host ="10640";
+            String host ="10643";
 
 //            //Name
 //        	System.out.print("Name: " + getInfor.getInstance().getName(host) + "\n");
@@ -49,7 +49,7 @@ public class getInfor {
         	
             while(true) {
             	
-            	Device demo = getInstance().getFull_Infor(host);
+            	Device demo = getInstance().getFull_Infor(host, authToken);
             	demo.Display();
             	            	
 //	            // Lấy CPU load cho một host cụ thể (thay hostId bằng ID host thực tế)
@@ -93,7 +93,8 @@ public class getInfor {
     }
     
     //Hàm lấy toàn bộ thông tin của một hostid đê show lastvalue
-    public Device getFull_Infor(String hostID) {
+    public Device getFull_Infor(String hostID, String token) {
+    	getInstance().setToken(token);
     	String id = hostID;
     	
     	//Khởi tạo các biến thông tin
@@ -106,8 +107,8 @@ public class getInfor {
 		String RAM_total = null;
 		String RAM_used = null;
 		String RAM_util = null;
-		String Time_hw = null;
-		String Time_net = null;
+		String Time_hardware = null;
+		String Time_network = null;
 		List<Disk> ListDisk = null;
 		
 		//Gửi API lấy thông tin
@@ -121,15 +122,15 @@ public class getInfor {
     		RAM_total = getRAMInfo_total(id);
     		RAM_used = getRAMInfo_used(id);
     		RAM_util = getRAMInfo_util(id);
-    		Time_hw = getTime_hardware(id);
-    		Time_net = getTime_network(id);
+    		Time_hardware = getTime_hardware(id);
+    		Time_network = getTime_network(id);
     		ListDisk = getDiskInfo(id);
 		}catch (Exception e) {
 			// TODO: handle exception
 		}
 		
 		//Trả về thiết bị với các thông tin cần
-		return new Device( name, id, IP, SNMP, CPUload, bitReceive, bitSend, RAM_total, RAM_used, RAM_util, Time_hw, Time_net, ListDisk);
+		return new Device( name, id, IP, SNMP, CPUload, bitReceive, bitSend, RAM_total, RAM_used, RAM_util, Time_hardware, Time_network, ListDisk);
     }
     
     //Ham lấy IP
@@ -162,7 +163,7 @@ public class getInfor {
     }
         
  // Lấy thông tin ổ đĩa
-    List<Disk> getDiskInfo(String hostId) throws Exception {
+    public List<Disk> getDiskInfo(String hostId) throws Exception {
         return Item_get.getInstance().getDiskInfo(hostId, authToken);
     }
     
