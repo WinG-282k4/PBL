@@ -50,9 +50,10 @@ public class Event {
 		}
 	}
 	
-	//Hàm lấy các vấn đề hiện tại
+	//Hàm lấy các vấn đ�? hiện tại
 	public List<Problem> getProblems(String authToken) {
-	    List<Problem> problems = new ArrayList<>();
+		//Tạo list trả v�?
+	    List<Problem> problems = new ArrayList<Problem>();
 
 	    // Tạo JSON request
 	    JSONObject request = new JSONObject()
@@ -157,6 +158,7 @@ public class Event {
 	        jsonResponse = Item_get.getInstance().sendRequest(request);
 	    } catch (Exception e) {
 	        e.printStackTrace();
+
 	        return actions; // Trả về danh sách rỗng nếu có lỗi
 	    }
 

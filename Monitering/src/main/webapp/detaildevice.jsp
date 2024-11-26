@@ -9,7 +9,7 @@
     <title>Device Information</title>
   </head>
   <body>
-  <c:forEach items="${requestScope.list }" var="data">
+
     <h1>Device Information</h1>
     <p>Host ID: ${data.hostid}</p>
     <p>Host IP: ${data.hostIP}</p>
@@ -29,7 +29,6 @@
         <li>Name: ${list.name}, Last Value: ${list.lastValue}</li>
       </c:forEach>
     </ul>
-    </c:forEach>
   </body>
 </html>
  

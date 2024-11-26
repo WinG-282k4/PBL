@@ -1,15 +1,7 @@
 package DLL.ZabbixAPI;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,9 +36,11 @@ public class getInfor {
             
             String host ="10641";
 
+
 //            //Name
 //        	System.out.print("Name: " + getInfor.getInstance().getName(host) + "\n");
 //        	System.out.print("IP: " + getInstance().getIP(host) + "\n");
+
 
             	Device demo = getInstance().getFull_Infor(host, Token);
             	demo.Display();
@@ -92,6 +86,7 @@ public class getInfor {
     
     //Hàm lấy toàn bộ thông tin của một hostid đê show lastvalue
     public Device getFull_Infor(String hostID, String token) {
+
     	setToken(token);
     	String id = hostID;
     	

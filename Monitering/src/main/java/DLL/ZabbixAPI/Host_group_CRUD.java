@@ -3,10 +3,8 @@ package DLL.ZabbixAPI;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import Model.Host;
 import Model.Host_Group;
 
@@ -67,17 +65,17 @@ public class Host_group_CRUD {
 	    try {
 	        jsonResponse = Item_get.getInstance().sendRequest(request);
 	    } catch (IOException e) {
-	        e.printStackTrace();
+	               System.out.println(e);
 	        return "Lỗi khi gửi request: " + e.getMessage();
 	    }
 
 	    try {
-	        // Kiểm tra kết quả trả về
+	        // Kiểm tra kết quả trả v�?
 	        JSONObject result = jsonResponse.getJSONObject("result");
 	        return "Thêm group thành công với ID: " + result.getJSONArray("groupids").getString(0);
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        // Bắt ngoại lệ khi JSON trả về lỗi
+	        // Bắt ngoại lệ khi JSON trả v�? lỗi
 	        return "Lỗi: " + jsonResponse.getJSONObject("error").optString("data");
 	    }
 	}
@@ -142,7 +140,7 @@ public class Host_group_CRUD {
 	//Hàm lấy các group
 	// Hàm lấy danh sách các group và các host trong từng group
 	public List<Host_Group> Get_Groups(String authToken) {
-	    List<Host_Group> rs = new ArrayList<>();
+	    List<Host_Group> rs = new ArrayList<Host_Group>();
 
 	    // Tạo JSON request
 	    JSONObject request = new JSONObject()
@@ -151,7 +149,7 @@ public class Host_group_CRUD {
 	            .put("id", 1)
 	            .put("auth", authToken) // Token xác thực
 	            .put("params", new JSONObject()
-	                .put("output", new JSONArray() // Lấy các trường cần thiết của group
+	                .put("output", new JSONArray() // Lấy các trư�?ng cần thiết của group
 	                    .put("groupid")
 	                    .put("name")
 	                )
@@ -167,7 +165,7 @@ public class Host_group_CRUD {
 	        jsonResponse = Item_get.getInstance().sendRequest(request);
 	    } catch (IOException e) {
 	        e.printStackTrace();
-	        return rs; // Trả về danh sách rỗng nếu lỗi xảy ra
+	        return rs; // Trả v�? danh sách rỗng nếu lỗi xảy ra
 	    }
 
 	    try {
@@ -179,7 +177,7 @@ public class Host_group_CRUD {
 	            String name = groupObj.getString("name");
 
 	            // Lấy danh sách các host trong group
-	            List<Host> hosts = new ArrayList<>();
+	            List<Host> hosts = new ArrayList<Host>();
 	            if (groupObj.has("hosts")) {
 	                JSONArray hostsArray = groupObj.getJSONArray("hosts");
 	                for (int j = 0; j < hostsArray.length(); j++) {
