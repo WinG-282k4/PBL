@@ -114,4 +114,14 @@
     <servlet-name>problem</servlet-name>
     <url-pattern>/problem</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>dasdboard</display-name>
+    <servlet-name>dasdboard</servlet-name>
+    <servlet-class>controller.dasdboard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>dasdboard</servlet-name>
+    <url-pattern>/dasdboard</url-pattern>
+  </servlet-mapping>
 </web-app>
