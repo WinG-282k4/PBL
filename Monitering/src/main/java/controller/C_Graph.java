@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -11,8 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import DLL.ZabbixAPI.DrawGraph;
+import DLL.ZabbixAPI.Host_CRUD;
 import DLL.ZabbixAPI.Item_get;
 import Model.Disk;
+import Model.Host;
 
 @WebServlet("/C_Graph")
 public class C_Graph extends HttpServlet {
@@ -37,7 +40,9 @@ public class C_Graph extends HttpServlet {
         String disk = request.getParameter("Diskname");
 
         // Xác thực với Zabbix API
-        String token = Item_get.getInstance().authenticate("Admin", "zabbix");
+        String token = Item_get.getToken();
+        List<Host> listhost = Host_CRUD.getInstance().getHosts(token);
+        request.setAttribute("listhost", listhost);
 
         // Kiểm tra và xử lý các tham số
         if (hostid != null && !hostid.isEmpty()) {

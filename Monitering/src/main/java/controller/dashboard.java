@@ -10,19 +10,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import DLL.ZabbixAPI.Event;
+import DLL.ZabbixAPI.Host_CRUD;
 import DLL.ZabbixAPI.Item_get;
+import Model.Host;
 import Model.Problem;
 
 /**
- * Servlet implementation class problem
+ * Servlet implementation class dasdboard
  */
-public class problem extends HttpServlet {
+public class dashboard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public problem() {
+    public dashboard() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,21 +34,12 @@ public class problem extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String destination = "/Problem.jsp";
-		String proID = request.getParameter("proID");
-		
-		if(proID.isEmpty()) {
-			List<Problem> problem = Event.getInstance().getProblems(Item_get.getToken());
-			request.setAttribute("listproblem", problem);
-		}else {
-			int seversity =Integer.parseInt(request.getParameter("seversity"));
-			String message = request.getParameter("message");
-			String ackParam = request.getParameter("acknowledge");
-		    boolean ack = "true".equalsIgnoreCase(ackParam);
-		    
-		    String rs = Event.getInstance().updateProblem(Item_get.getToken(), proID, seversity, message, ack);
-		    request.setAttribute("result", rs);			
-		}
+		String destination = "/dashboard";
+		String token = Item_get.getToken();
+		List<Host> listhost = Host_CRUD.getInstance().getHosts(token);
+		List<Problem> listproblem = Event.getInstance().getProblems(token);
+		request.setAttribute("listhost", listhost);
+		request.setAttribute("listproblem", listproblem);
 		
 		forwardRequest(request, response, destination);
 	}
