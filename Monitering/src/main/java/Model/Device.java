@@ -3,31 +3,7 @@ package Model;
 import java.util.List;
 
 public class Device {
-<<<<<<< HEAD
-	private String Name;
-	private String hostid;
-	private String hostIP;
-	private String SNMP;
-	private String CPU;
-	private String bitReceive;
-	private String bitSend;
-	private String RAM_total;
-	private String RAM_used;
-	private String RAM_util;
-	private String Time_hardware;
-	private String Time_network;
-	private List<Disk> ListDisk;
-	
-	
 
-	
-	
-	
-	public Device(String name, String hostid, String hostIP, String sNMP, String cPU, String bitReceive, String bitSend,
-			String rAM_total, String rAM_used, String rAM_util, String time_hardware, String time_network,
-			List<Disk> listDisk) {
-		super();
-=======
 	String Name;
 	String hostid;
 	String hostIP;
@@ -43,20 +19,19 @@ public class Device {
 	List<Disk> ListDisk;
 	
 	public Device( String name, String id, String IP, Item SNMP_avai, Item CPUul, Item receive, Item send, Item R_t, Item R_us, Item R_ut, Item hard, Item net, List<Disk> LD ) {
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 		Name = name;
 		this.hostid = hostid;
 		this.hostIP = hostIP;
-		SNMP = sNMP;
-		CPU = cPU;
+		SNMP = SNMP_avai;
+		CPU = CPUul;
 		this.bitReceive = bitReceive;
 		this.bitSend = bitSend;
-		RAM_total = rAM_total;
-		RAM_used = rAM_used;
-		RAM_util = rAM_util;
-		Time_hardware = time_hardware;
-		Time_network = time_network;
-		ListDisk = listDisk;
+		RAM_total = R_t;
+		RAM_used = R_us;
+		RAM_util = R_ut;
+		Time_hardware = hard;
+		Time_network = net;
+		ListDisk = LD;
 	}
 
 	public void Display() {
@@ -87,166 +62,22 @@ public class Device {
 		Name = name;
 	}
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 	public String getHostid() {
 		return hostid;
 	}
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 	public void setHostid(String hostid) {
 		this.hostid = hostid;
 	}
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 	public String getHostIP() {
 		return hostIP;
 	}
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 	public void setHostIP(String hostIP) {
 		this.hostIP = hostIP;
 	}
 
-<<<<<<< HEAD
-
-
-	public String getSNMP() {
-		return SNMP;
-	}
-
-
-
-	public void setSNMP(String sNMP) {
-		SNMP = sNMP;
-	}
-
-
-
-	public String getCPU() {
-		return CPU;
-	}
-
-
-
-	public void setCPU(String cPU) {
-		CPU = cPU;
-	}
-
-
-
-	public String getBitReceive() {
-		return bitReceive;
-	}
-
-
-
-	public void setBitReceive(String bitReceive) {
-		this.bitReceive = bitReceive;
-	}
-
-
-
-	public String getBitSend() {
-		return bitSend;
-	}
-
-
-
-	public void setBitSend(String bitSend) {
-		this.bitSend = bitSend;
-	}
-
-
-
-	public String getRAM_total() {
-		return RAM_total;
-	}
-
-
-
-	public void setRAM_total(String rAM_total) {
-		RAM_total = rAM_total;
-	}
-
-
-
-	public String getRAM_used() {
-		return RAM_used;
-	}
-
-
-
-	public void setRAM_used(String rAM_used) {
-		RAM_used = rAM_used;
-	}
-
-
-
-	public String getRAM_util() {
-		return RAM_util;
-	}
-
-
-
-	public void setRAM_util(String rAM_util) {
-		RAM_util = rAM_util;
-	}
-
-
-
-	public String getTime_hardware() {
-		return Time_hardware;
-	}
-
-	
-
-	public void setTime_hardware(String time_hardware) {
-		Time_hardware = time_hardware;
-	}
-
-
-
-	public String getTime_network() {
-		return Time_network;
-	}
-
-
-
-	public void setTime_network(String time_network) {
-		Time_network = time_network;
-	}
-
-
-
-	public List<Disk> getListDisk() {
-		return this.ListDisk;
-	}
-
-
-
-	public void setListDisk(List<Disk> listDisk) {
-		ListDisk = listDisk;
-	}
-
-	
-	
-=======
 	public Item getSNMP() {
 		return SNMP;
 	}
@@ -326,5 +157,4 @@ public class Device {
 	public void setListDisk(List<Disk> listDisk) {
 		ListDisk = listDisk;
 	}
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 }

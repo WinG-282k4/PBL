@@ -38,17 +38,6 @@ public class Host_CRUD {
     	//Laays token
 		String token = Item_get.getInstance().authenticate("Admin", "zabbix");
 		
-<<<<<<< HEAD
-//		Host temp = new Host("Thanh_Laptop", "10639", "22", "  ", "192.168.0.145", " ", "password", "2", "Test tạo host 1");
-//		Host temp = new Host("Ngoc_Laptop", "10642", "22", "  ", "10.10.56.32", " ", "password", "2", "Laptop của Ngoc");
-////		getInstance().getTemplates(token, Item_get.getInstance().getURL());
-//		
-////		//Tạo host
-////		String Create_host = getInstance().Create_Host(temp, token);
-////		System.out.print(Create_host);
-//		
-//		//Update 1 host
-=======
 //		Host temp = new Host("Thanh_PCSNMP", "10640", "22", "  ", "192.168.0.189", " ", "password", "2", "PC của Thanh");
 		Host temp = new Host("Thanh_Laptop", "10639", "22", "  ", "192.168.0.145", " ", "password", "2", "Laptop của Thanh");
 //		getInstance().getTemplates(token, Item_get.getInstance().getURL());
@@ -58,7 +47,6 @@ public class Host_CRUD {
 //		System.out.print(Create_host);
 //		
 		//Update 1 host
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 //		getInstance().Update_Host(temp, token);
 	
 //		//Test xóa host

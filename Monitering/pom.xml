@@ -42,7 +42,6 @@
     <version>20240303</version>
 </dependency>
 
-<<<<<<< HEAD
 <!-- https://mvnrepository.com/artifact/jstl/jstl -->
 <dependency>
     <groupId>jstl</groupId>
@@ -51,14 +50,12 @@
 </dependency>
 <!-- https://mvnrepository.com/artifact/javax.servlet.jsp.jstl/jstl-api -->
 
-=======
 <!-- https://mvnrepository.com/artifact/org.webjars/chartjs -->
 <dependency>
     <groupId>org.webjars</groupId>
     <artifactId>chartjs</artifactId>
     <version>4.4.3</version>
 </dependency>
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 
 
 

@@ -1,15 +1,7 @@
 package DLL.ZabbixAPI;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,24 +34,15 @@ public class getInfor {
             String Token = Item_get.getInstance().authenticate(user, password);
             System.out.println("Authenticated with token: " + Token);
             
-<<<<<<< HEAD
-            String host ="10643";
-=======
             String host ="10641";
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
+
 
 //            //Name
 //        	System.out.print("Name: " + getInfor.getInstance().getName(host) + "\n");
 //        	System.out.print("IP: " + getInstance().getIP(host) + "\n");
-<<<<<<< HEAD
-        	
-            while(true) {
-            	
-            	Device demo = getInstance().getFull_Infor(host, authToken);
-=======
+
 
             	Device demo = getInstance().getFull_Infor(host, Token);
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
             	demo.Display();
             	            	
 //	            // Lấy CPU load cho một host cụ thể (thay hostId bằng ID host thực tế)
@@ -103,27 +86,14 @@ public class getInfor {
     
     //Hàm lấy toàn bộ thông tin của một hostid đê show lastvalue
     public Device getFull_Infor(String hostID, String token) {
-<<<<<<< HEAD
-    	getInstance().setToken(token);
-=======
+
     	setToken(token);
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
     	String id = hostID;
     	
     	//Khởi tạo các biến thông tin
 		String name = null;
 		Item CPUload = null;
 		String IP = null;
-<<<<<<< HEAD
-		String SNMP = null;
-		String bitReceive = null;
-		String bitSend = null;
-		String RAM_total = null;
-		String RAM_used = null;
-		String RAM_util = null;
-		String Time_hardware = null;
-		String Time_network = null;
-=======
 		Item SNMP = null;
 		Item bitReceive = null;
 		Item bitSend = null;
@@ -132,7 +102,6 @@ public class getInfor {
 		Item RAM_util = null;
 		Item Time_hw = null;
 		Item Time_net = null;
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 		List<Disk> ListDisk = null;
 		
 		//Gửi API lấy thông tin
@@ -146,15 +115,15 @@ public class getInfor {
     		RAM_total = getRAMInfo_total(id);
     		RAM_used = getRAMInfo_used(id);
     		RAM_util = getRAMInfo_util(id);
-    		Time_hardware = getTime_hardware(id);
-    		Time_network = getTime_network(id);
+    		Time_hw = getTime_hardware(id);
+    		Time_net = getTime_network(id);
     		ListDisk = getDiskInfo(id);
 		}catch (Exception e) {
 			// TODO: handle exception
 		}
 		
 		//Trả về thiết bị với các thông tin cần
-		return new Device( name, id, IP, SNMP, CPUload, bitReceive, bitSend, RAM_total, RAM_used, RAM_util, Time_hardware, Time_network, ListDisk);
+		return new Device( name, id, IP, SNMP, CPUload, bitReceive, bitSend, RAM_total, RAM_used, RAM_util, Time_hw, Time_net, ListDisk);
     }
     
     //Ham lấy IP
@@ -186,11 +155,7 @@ public class getInfor {
     	
     }
         
-<<<<<<< HEAD
- // Lấy thông tin ổ đĩa
-=======
     // Lấy thông tin ổ đĩa
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
     public List<Disk> getDiskInfo(String hostId) throws Exception {
         return Item_get.getInstance().getDiskInfo(hostId, authToken);
     }

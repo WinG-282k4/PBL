@@ -50,14 +50,10 @@ public class Event {
 		}
 	}
 	
-	//Hàm lấy các vấn đ�? hiện tại
+	//Hàm lấy các vấn đ�? hiện tại
 	public List<Problem> getProblems(String authToken) {
-<<<<<<< HEAD
-		//Tạo list trả v�?
+		//Tạo list trả v�?
 	    List<Problem> problems = new ArrayList<Problem>();
-=======
-	    List<Problem> problems = new ArrayList<>();
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 
 	    // Tạo JSON request
 	    JSONObject request = new JSONObject()
@@ -162,11 +158,8 @@ public class Event {
 	        jsonResponse = Item_get.getInstance().sendRequest(request);
 	    } catch (Exception e) {
 	        e.printStackTrace();
-<<<<<<< HEAD
-	        return problems; // Trả v�? danh sách rỗng nếu lỗi xảy ra
-=======
+
 	        return actions; // Trả về danh sách rỗng nếu có lỗi
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 	    }
 
 	    // Xử lý kết quả
@@ -204,29 +197,6 @@ public class Event {
 	    Map<String, String> hostInfo = new HashMap<>(); // Lưu hostid và hostname
 
 	    try {
-<<<<<<< HEAD
-	    	//Xử lý kết quả
-	        JSONArray results = jsonResponse.getJSONArray("result");
-	        for (int i = 0; i < results.length(); i++) {
-	        	
-	        	//Lấy thông tin
-	            JSONObject obj = results.getJSONObject(i);
-	            String eventId = obj.getString("eventid");
-	            String name = obj.getString("name");
-	            int severity = obj.getInt("severity");
-	            long clock = obj.getLong("clock");  // Th�?i gian sự kiện
-	            long ackClock = 0;  // Mặc định là 0 (chưa có th�?i gian ghi nhận)
-	            boolean acknowledged = obj.getInt("acknowledged") == 1;
-	            String message = ""; // Mặc định message rỗng
-
-	            // Kiểm tra mảng acknowledges và lấy clock và message nếu có
-	            if (obj.has("acknowledges")) {
-	                JSONArray acknowledges = obj.getJSONArray("acknowledges");
-	                if (acknowledges.length() > 0) {
-	                    JSONObject acknowledge = acknowledges.getJSONObject(0); // Chỉ lấy phần tử đầu tiên (nếu có)
-	                    ackClock = acknowledge.optLong("clock", 0);  // Lấy th�?i gian ghi nhận
-	                    message = acknowledge.optString("message", "");  // Lấy message từ phần acknowledges
-=======
 	        // Tạo JSON request cho API event.get
 	        JSONObject hostRequest = new JSONObject()
 	                .put("jsonrpc", "2.0")
@@ -255,7 +225,6 @@ public class Event {
 	                    JSONObject host = hosts.getJSONObject(0);
 	                    hostInfo.put("hostid", host.optString("hostid", ""));
 	                    hostInfo.put("hostname", host.optString("host", ""));
->>>>>>> bbae12ffffc95a05958bcc83df8f8f404ce9c92e
 	                }
 	            }
 	        }
