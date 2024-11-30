@@ -120,6 +120,7 @@ public class DrawGraph {
             graphList.add(graph);
 		}
 		
+		//Đổi kiểu dữ liệu lấy
 		if(graphList.isEmpty()) {
 			
 			type = 3;
@@ -154,6 +155,11 @@ public class DrawGraph {
 
 	    // Lấy lịch sử của các itemId (có thể phân loại theo kiểu dữ liệu)
 	    List<Graph> resultsCPU = getHistoryItem(authToken, host.getCPU().getId(), timeFrom, timeNow);
+	    //Xử lý giá trị CPU bị lỗi, x10 mới đúng
+	    for(Graph gr : resultsCPU) {
+	    	if(Double.parseDouble(gr.getValue()) > 10) continue;
+        	gr.setValue(String.valueOf(Double.parseDouble(gr.getValue())*10));
+        	}
 	    List<Graph> resultsRAM = getHistoryItem(authToken, host.getRAM_util().getId(), timeFrom, timeNow);
 	    List<Graph> resultsBitReceive = getHistoryItem(authToken, host.getBitReceive().getId(), timeFrom, timeNow);
 	    List<Graph> resultsBitSend = getHistoryItem(authToken, host.getBitSend().getId(), timeFrom, timeNow);
@@ -166,8 +172,8 @@ public class DrawGraph {
 	    graphMap.put("RAM_%", resultsRAM);
 	    graphMap.put("Bit Reiceive_Kbps", resultsBitReceive);
 	    graphMap.put("Bit Send_Kbps", resultsBitSend);
-	    graphMap.put("Time Hardware_Second", resultsTimHard);
-	    graphMap.put("Time Network_Second", resultsTimeNet);
+	    graphMap.put("Time Hardware_Hour", resultsTimHard);
+	    graphMap.put("Time Network_Hour", resultsTimeNet);
 
 	    return graphMap;
 	}
@@ -181,26 +187,22 @@ public class DrawGraph {
             String itemID = entry.getKey();  // Lấy item ID(Name)
             List<Graph> graphs = entry.getValue();
             
-//            //Nếu có đợn vị là thời gian
-//            if(itemID.contains("HH:MM:SS")) {
-//            	//duyệt qua từng phần tử
-//            	for(Graph temp : graphs) {
-//            		String value = temp.getValue();
-//            		long seconds = Long.parseLong(value);
-//
-//            		// Tính toán số ngày, giờ, phút, giây
-//            		long days = seconds / (24 * 3600); // 1 ngày = 86400 giây
-//            		long hours = (seconds % (24 * 3600)) / 3600;
-//            		long minutes = (seconds % 3600) / 60;
-//            		long remainingSeconds = seconds % 60;
-//
-//            		// Định dạng lại giá trị thành ngày, giờ, phút, giây
-//            		value = String.format("%d %02d:%02d:%02d", days, hours, minutes, remainingSeconds);
-//
-//            		temp.setValue(value);
-//
-//            	}
-//            }
+         // Nếu có đơn vị là thời gian
+            if (itemID.contains("Hour")) {
+                // Duyệt qua từng phần tử
+                for (Graph temp : graphs) {
+                    String value = temp.getValue();
+                    long seconds = Long.parseLong(value);
+
+                    // Tính toán số giờ (bao gồm cả phần thập phân)
+                    double hours = seconds / 3600.0;
+
+                    // Định dạng lại giá trị thành giờ với 2 chữ số thập phân
+                    value = String.format("%.2f", hours);
+
+                    temp.setValue(value);
+                }
+            }
 
             // Lấy dữ liệu labels và values cho từng item
             String labels = graphs.stream()

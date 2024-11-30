@@ -83,9 +83,11 @@
                         data: data,
                         backgroundColor: 'rgba(255, 99, 132, 0.6)',
                         borderWidth: 1,
-                        borderColor: '#777',
+                        borderColor: 'blue',
                         hoverBorderWidth: 3,
-                        hoverBorderColor: '#000'
+                        hoverBorderColor: '#000',
+                        pointRadius: 0, // Hide points
+                        pointHoverRadius: 5 // Hide points on hover
                     }]
                 },
                 options: {
