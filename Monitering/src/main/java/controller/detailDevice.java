@@ -33,8 +33,7 @@ public class detailDevice extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String hostid=request.getParameter("ID");
-        String authToken = Item_get.getInstance().authenticate("Admin", "zabbix");
-       
+        String authToken = (String)request.getSession().getAttribute("token");
 		Device dv=getInfor.getInstance().getFull_Infor(hostid,authToken);
 		if(dv!=null) {
 			request.setAttribute("data", dv);

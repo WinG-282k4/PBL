@@ -30,7 +30,7 @@ public class deleteHost extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String authToken = Item_get.getInstance().authenticate("Admin", "zabbix");
+		String authToken = (String)request.getSession().getAttribute("token");
 		String hostid=request.getParameter("id");
 		List<Host> list=Host_CRUD.getInstance().getHosts(authToken);
 		Host host = null;
@@ -43,7 +43,7 @@ public class deleteHost extends HttpServlet {
         if(host.getHostid()!=null) {
         	String rs = Host_CRUD.getInstance().Delete_Host(host, authToken);
         	System.out.print(rs);
-        	response.sendRedirect("getthongtin");
+        	request.getRequestDispatcher("check?action=listhost").forward(request, response);
         }
 	
 	}

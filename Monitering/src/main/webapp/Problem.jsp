@@ -9,7 +9,7 @@
     <script>
         function doDelete(id){
             if(confirm("bạn có chắc chắn muốn xóa id = "+id)){
-                window.location="check?action=deletehostgroup&groupid="+id;
+                window.location="check?action=deletehost&id="+id;
             }
         }
     </script>
@@ -99,30 +99,36 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <a href="check?action=listgrouphost">List Group Host</a>
-        <a href="check?action=problem">List Problem</a>
         <a href="check?action=addhost">Add Host</a>
+        <a href="check?action=problem">List Problem</a>
         <a href="check?action=updatehost">Update Host</a>
         <a href="check?action=problemhostid">Problem Host ID</a>
     </div>
 
     <!-- Main Content -->
     <div class="content">
-        <div class="error">
-            ${requestScope.error}
-        </div>
-        <a href="check?action=addhostgroup">Add Host Group</a>
+        <c:forEach items="${requestScope.list }" var="data">
+            <h1>Host Information</h1>
 
-        <c:forEach items="${requestScope.list}" var="data">
-            <h1>Host GROUP Information</h1>
-            <p>GROUP ID: ${data.getId()}</p>
-            <p>GROUP Name: ${data.getName()}</p>
+            <p>Event ID: ${data.getEventId()}</p>
+            <p>Name: ${data.getName()}</p>
+            <p>Hostname: ${data.getHid()}</p>
+            <p>Host ID: ${data.getHName()}</p>
+            <p>Severity: ${data.getSeverity()}</p>
+            <p>Clock: ${data.getClock()}</p>
+            <p>Acknowledged Clock: ${data.getAckClock()}</p>
+            <p>Acknowledged: ${data.isAcknowledged()}</p>
+
+            <h3>Actions</h3>
             <ul>
-                <c:forEach items="${data.getHosts()}" var="list1">
-                    <li>Host ID: ${list1.getHostid()}, Host Name: ${list1.getHostName()}</li>
+                <c:forEach items="${data.getAction()}" var="list1">
+                    <li>Message: ${list1.getMessage()}, Clock: ${list1.getClock()}, Old Severity: ${list1.get_old()}, New Severity: ${list1.get_new()}</li>
                 </c:forEach>
             </ul>
-            <a href="#" onclick="doDelete(${data.getId()});">Delete</a> |
-            <a href="check?action=updatehostgroup&groupid=${data.getId()}">Update</a>
+
+            <br/>
+            <a href="#" onclick="doDelete(${data.getEventId()});">Delete</a> |
+            <a href="check?action=updateproblem&eventid=${data.getEventId()}">Update</a>
         </c:forEach>
     </div>
 </body>

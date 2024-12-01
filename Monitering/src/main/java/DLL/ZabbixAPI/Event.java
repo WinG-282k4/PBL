@@ -329,5 +329,86 @@ public class Event {
         LocalDateTime dateTime = LocalDateTime.parse(dateString, formatter);
         return dateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
     }
+  //Lấy proplem của 1 host
+  		public List<Problem> getProblems1Host(String authToken, String hostId) {
+  			//Tạo list trả v�?
+  		    List<Problem> problems = new ArrayList<Problem>();
+
+  		    // Tạo JSON request
+  		    JSONObject request = new JSONObject()
+  		    	    .put("jsonrpc", "2.0")
+  		    	    .put("method", "problem.get")
+  		    	    .put("id", 1)
+  		    	    .put("auth", authToken)
+  		    	    .put("params", new JSONObject()
+  		    	    	.put("hostids", hostId)
+  		    	        .put("output", new JSONArray()
+  		    	            .put("eventid")
+  		    	            .put("name")
+  		    	            .put("clock")
+  		    	            .put("severity")
+  		    	            .put("acknowledged")
+  		    	        		)
+  		    	        .put("source", 0) // Chỉ lấy các sự kiện liên quan đến trigger
+  		    	        .put("object", 0) // Liên kết với trigger
+  		    	        .put("sortfield", "eventid") // Sắp xếp theo thời gian
+  		    	        .put("sortorder", "DESC") // Mới nhất trước
+  		    	        .put("suppressed",false)
+  		    	    		
+  		    	    		);
+
+
+  		    try {
+  		        // Gửi request
+  		        JSONObject jsonResponse = Item_get.getInstance().sendRequest(request);
+
+  		        JSONArray results = jsonResponse.getJSONArray("result");
+  		        
+  		        // Duyệt qua từng problem
+  		        for (int i = 0; i < results.length(); i++) {
+  		            JSONObject obj = results.getJSONObject(i);
+  		            
+  		            //Lấy các thông tin về event(problem)
+  		            String eventId = obj.getString("eventid");
+  		            String name = obj.getString("name");
+  		            int severity = obj.getInt("severity");
+  		            long L_clock = obj.getLong("clock");
+  		            String acknowledged = obj.getString("acknowledged");
+  		            Boolean authacknowledged = false;
+  		            if(acknowledged.equals("1")) authacknowledged = true;
+  		            
+  		            //Thời gian xác nhận mặc định bằng 0 - chưa đc xác nhận
+  		            long L_ackClock = 0;
+
+  		            // Lấy danh sách acknowledge
+  		            List<Acknowledge> actions = getAction(authToken, eventId);	   
+  		            
+  		            for(Acknowledge at : actions) {
+  		            	long ackTime = convertDateToEpoch(at.getClock());
+  	                // Cập nhật ackClock nếu event đã xác nhận
+  		                if (L_ackClock < ackTime && ackTime != 0) {
+  		                    L_ackClock = ackTime;
+  		                }
+  		            }
+
+  		            //Chuyển định dạng clock từ long thành string
+  		            String clock = convertEpochToDate(L_clock);
+  		            String ackClock = "Chưa xác nhận";
+  		            if(L_ackClock != 0) ackClock = convertEpochToDate(L_ackClock);
+  		            
+  		            // Lấy thông tin host từ ênt
+  		            Map<String, String> h = getHostFromEvent(authToken, eventId);
+  		            String hostName = h.get("hostname");
+  		            
+  		            // Thêm problem vào danh sách
+  		            problems.add(new Problem(eventId, name, hostId, hostName, severity, clock, ackClock, authacknowledged, actions));
+  		        }
+
+  		    } catch (Exception e) {
+  		        e.printStackTrace();
+  		    }
+
+  		    return problems;
+  		}
 
 }

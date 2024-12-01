@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import DLL.ZabbixAPI.Host_CRUD;
+import DLL.ZabbixAPI.Host_group_CRUD;
 import DLL.ZabbixAPI.Item_get;
 import Model.Host;
+import Model.Host_Group;
 
 /**
  * Servlet implementation class updateHost
@@ -30,8 +32,9 @@ public class updateHost extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String authToken = Item_get.getInstance().authenticate("Admin", "zabbix");
+		String authToken = (String)request.getSession().getAttribute("token");
 		String hostid=request.getParameter("hostid");
+		List<Host_Group> groups=Host_group_CRUD.getInstance().Get_Groups(authToken);
 		try {
 			Host host=null;
 			List<Host> list=Host_CRUD.getInstance().getHosts(authToken);
@@ -41,6 +44,7 @@ public class updateHost extends HttpServlet {
 				}
 			}
 			if(host!=null) {
+				request.setAttribute("list", groups);
 				request.setAttribute("host", host);
 				request.getRequestDispatcher("updateHost.jsp").forward(request, response);
 			}
@@ -54,7 +58,7 @@ public class updateHost extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		String authToken = Item_get.getInstance().authenticate("Admin", "zabbix");
+		String authToken = (String)request.getSession().getAttribute("token");
 		String hostName=request.getParameter("hostName");
 		String hostid=request.getParameter("hostid");
 		String hostIP=request.getParameter("hostIP");

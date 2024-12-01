@@ -37,7 +37,7 @@ public class getthongtin extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			String authToken = Item_get.getInstance().authenticate("Admin","zabbix");
+			String authToken =(String)request.getSession().getAttribute("token");
 			List<Host> hosts=Host_CRUD.getInstance().getHosts(authToken);
 			request.setAttribute("list", hosts);
 			request.getRequestDispatcher("listhost.jsp").forward(request, response);

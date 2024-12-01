@@ -34,7 +34,7 @@ public class updateHostGroup extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String groupID=request.getParameter("groupid");
-		String authToken = Item_get.getInstance().authenticate("Admin", "zabbix");
+		String authToken = (String)request.getSession().getAttribute("token");
 		List<Host_Group> list=Host_group_CRUD.getInstance().Get_Groups(authToken);
 		Host_Group host_Group=null;
 		try {
@@ -57,7 +57,7 @@ public class updateHostGroup extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		String authToken = Item_get.getInstance().authenticate("Admin", "zabbix");
+		String authToken = (String)request.getSession().getAttribute("token");
 
 		String groupID=request.getParameter("groupid");
 		String groupname=request.getParameter("groupName");

@@ -37,13 +37,12 @@ public class problem extends HttpServlet {
 		
 		if(proID.isEmpty()) {
 			List<Problem> problem = Event.getInstance().getProblems(Item_get.getToken());
-			request.setAttribute("listproblem", problem);
+			request.setAttribute("list", problem);
 		}else {
 			int seversity =Integer.parseInt(request.getParameter("seversity"));
 			String message = request.getParameter("message");
 			String ackParam = request.getParameter("acknowledge");
 		    boolean ack = "true".equalsIgnoreCase(ackParam);
-		    
 		    String rs = Event.getInstance().updateProblem(Item_get.getToken(), proID, seversity, message, ack);
 		    request.setAttribute("result", rs);			
 		}

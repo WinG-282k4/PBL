@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import DLL.ZabbixAPI.DrawGraph;
 import DLL.ZabbixAPI.Host_CRUD;
 import DLL.ZabbixAPI.Item_get;
+import DLL.ZabbixAPI.getInfor;
 import Model.Disk;
 import Model.Host;
 
@@ -35,12 +36,14 @@ public class C_Graph extends HttpServlet {
         String destination = "/Graph.jsp";
 
         // Lấy các tham số từ request
-        String hostid = "10641"; request.getParameter("hostid");
+//        String hostid = "10642"; request.getParameter("hostid");
+        String hostid = request.getParameter("ID");
         String itemid = request.getParameter("itemid");
         String disk = request.getParameter("Diskname");
 
         // Xác thực với Zabbix API
-        String token = Item_get.getToken();
+        String token =(String)request.getSession().getAttribute("token");
+
         List<Host> listhost = Host_CRUD.getInstance().getHosts(token);
         request.setAttribute("listhost", listhost);
 

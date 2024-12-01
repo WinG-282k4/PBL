@@ -36,23 +36,23 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>deleteDevice</display-name>
-    <servlet-name>deleteDevice</servlet-name>
-    <servlet-class>controller.deleteDevice</servlet-class>
+    <display-name>deleteHost</display-name>
+    <servlet-name>deleteHost</servlet-name>
+    <servlet-class>controller.deleteHost</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>deleteDevice</servlet-name>
-    <url-pattern>/deleteDevice</url-pattern>
+    <servlet-name>deleteHost</servlet-name>
+    <url-pattern>/deleteHost</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>addDevice</display-name>
-    <servlet-name>addDevice</servlet-name>
-    <servlet-class>controller.addDevice</servlet-class>
+    <display-name>addHost</display-name>
+    <servlet-name>addHost</servlet-name>
+    <servlet-class>controller.addHost</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>addDevice</servlet-name>
-    <url-pattern>/addDevice</url-pattern>
+    <servlet-name>addHost</servlet-name>
+    <url-pattern>/addHost</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>

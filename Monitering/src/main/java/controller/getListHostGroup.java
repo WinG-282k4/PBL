@@ -30,7 +30,7 @@ public class getListHostGroup extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String authToken = Item_get.getInstance().authenticate("Admin", "zabbix");
+		String authToken = (String)request.getSession().getAttribute("token");
 		List<Host_Group> list= Host_group_CRUD.getInstance().Get_Groups(authToken);
 		try {
 			if(list.size()>0) {

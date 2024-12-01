@@ -1,27 +1,26 @@
 package controller;
 
 import java.io.IOException;
-import java.util.List;
-
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import DLL.ZabbixAPI.Host_group_CRUD;
 import DLL.ZabbixAPI.Item_get;
-import Model.Host_Group;
 
 /**
- * Servlet implementation class addHostGroup
+ * Servlet implementation class login
  */
-public class addHostGroup extends HttpServlet {
+@WebServlet("/login")
+public class login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public addHostGroup() {
+    public login() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,23 +30,13 @@ public class addHostGroup extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		String authToken = (String)request.getSession().getAttribute("token");
-		String groupName=request.getParameter("groupName");
-		List<Host_Group> list=Host_group_CRUD.getInstance().Get_Groups(authToken);
-		boolean check=false;
-		try {
-			for(int i=0;i<list.size();i++) {
-				if(groupName.equals(list.get(i).getName())) {
-					check=true;
-				}
-			}
-			if(check==false) {
-				Host_group_CRUD.getInstance().Create_Group(groupName, authToken);
-				response.sendRedirect("getListHostGroup");
-				
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
+		String username=request.getParameter("username");
+		String password=request.getParameter("password");
+		HttpSession session=request.getSession();
+		if(Item_get.getInstance().authenticate(username, password)!=null) {
+			String token=Item_get.getInstance().authenticate(username, password);
+			session.setAttribute("token", token);
+			response.sendRedirect("getthongtin");
 		}
 	}
 

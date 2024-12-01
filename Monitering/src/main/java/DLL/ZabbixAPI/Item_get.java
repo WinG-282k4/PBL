@@ -39,7 +39,7 @@ public class Item_get {
 		Token = token;
 	}
 
-	private static String ZABBIX_API_URL = "http://192.168.242.96/zabbix/api_jsonrpc.php";
+	private static String ZABBIX_API_URL = "http://192.168.1.23/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.29.193/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.59.231/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.50.254/zabbix/api_jsonrpc.php";
@@ -54,7 +54,7 @@ public class Item_get {
 	}
 
     // Lấy token xác thực từ Zabbix
-    public String authenticate(String USERNAME, String PASSWORD) {
+	public String authenticate(String USERNAME, String PASSWORD) {
         try {
 			URL url = new URL(ZABBIX_API_URL);
 		} catch (MalformedURLException e) {
@@ -75,13 +75,17 @@ public class Item_get {
         JSONObject jsonResponse = null;
 		try {
 			jsonResponse = Item_get.getInstance().sendRequest(authRequest);
+		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		Token = jsonResponse.getString("result");
-
-        return jsonResponse.getString("result"); // Auth token nằm trong "result"
+		
+		if	(jsonResponse.has("error")) {
+			Token = "error: " + jsonResponse.getJSONObject("error").getString("data");
+		}else {
+			Token = jsonResponse.optString("result", "0");
+		}
+        return Token; // Auth token nằm trong "result"
     }
     
 	// Lấy 1 thông tin với key
@@ -257,4 +261,5 @@ public class Item_get {
   	            ? result.getJSONObject(0).getString("name")
   	            : "No item name found";
   	}
+  	
 }

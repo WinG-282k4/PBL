@@ -20,12 +20,12 @@ public class Device {
 	
 	public Device( String name, String id, String IP, Item SNMP_avai, Item CPUul, Item receive, Item send, Item R_t, Item R_us, Item R_ut, Item hard, Item net, List<Disk> LD ) {
 		Name = name;
-		this.hostid = hostid;
-		this.hostIP = hostIP;
+		this.hostid = id;
+		this.hostIP = IP;
 		SNMP = SNMP_avai;
 		CPU = CPUul;
-		this.bitReceive = bitReceive;
-		this.bitSend = bitSend;
+		this.bitReceive = receive;
+		this.bitSend = send;
 		RAM_total = R_t;
 		RAM_used = R_us;
 		RAM_util = R_ut;
