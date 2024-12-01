@@ -35,17 +35,17 @@ public class C_Graph extends HttpServlet {
         String destination = "/Graph.jsp";
 
         // Lấy các tham số từ request
-        String hostid = "10642"; request.getParameter("hostid");
+        String hostid = "10643"; request.getParameter("hostid");
         String itemid = request.getParameter("itemid");
         String disk = request.getParameter("Diskname");
 
-        // Xác thực với Zabbix API
-        String token = Item_get.getInstance().authenticate("Admin", "zabbix"); Item_get.getToken();
+        // lấy token
+//        String token = (String)request.getSession().getAttribute("token"); 
+        String token = Item_get.getInstance().authenticate("Admin", "zabbix");
         
         List<Host> listhost = Host_CRUD.getInstance().getHosts(token);
         request.setAttribute("listhost", listhost);
         
-        System.out.print(token);
         // Kiểm tra và xử lý các tham số
         if (hostid != null && !hostid.isEmpty()) {
             // Lấy danh sách đồ thị cho từng item của hostid
