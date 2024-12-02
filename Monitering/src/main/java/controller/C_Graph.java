@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import DLL.ZabbixAPI.DrawGraph;
 import DLL.ZabbixAPI.Host_CRUD;
+import DLL.ZabbixAPI.Item_get;
 import Model.Disk;
 import Model.Host;
 
@@ -23,6 +24,8 @@ public class C_Graph extends HttpServlet {
     // Thời gian (từ - đến) để lấy dữ liệu đồ thị
     static long timeFrom = System.currentTimeMillis() / 1000 - 3600; // 1 giờ trước
     static long timeTill = System.currentTimeMillis() / 1000;        // Bây giờ
+
+	private List<Disk> diskgraph1;
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -31,7 +34,7 @@ public class C_Graph extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String destination = "/Graph.jsp";
+        String destination = "/graph2.jsp";
 
         // Lấy các tham số từ request
 //      String hostid = "10642"; request.getParameter("hostid");
@@ -49,7 +52,20 @@ public class C_Graph extends HttpServlet {
         if (hostid != null && !hostid.isEmpty()) {
             // Lấy danh sách đồ thị cho từng item của hostid
             Map<String, String> graphData = DrawGraph.getInstance().getGraphhost(token, hostid, timeFrom, timeTill);
-
+            List<Disk> diskgraph;
+            diskgraph1 = null;
+			try {
+				diskgraph = Item_get.getInstance().getDiskInfo(hostid,token);
+				for(int i=0;i<diskgraph.size();i++) {
+					if(diskgraph.get(i).getName().equals("%")) {
+						diskgraph1.add(diskgraph.get(i));
+					}
+				}
+				request.setAttribute("GraphDisk", diskgraph);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             // Truyền graphData sang JSP
             request.setAttribute("GraphData", graphData);
             
@@ -60,13 +76,24 @@ public class C_Graph extends HttpServlet {
             
         } else if (disk != null && !disk.isEmpty()) {
         	
-        	String Value = request.getParameter("value");
-        	Disk diskgraph = new Disk(disk,Value);
+        	//String Value = request.getParameter("value");
+        	//Disk diskgraph = new Disk(disk,Value);
+        	List<Disk> diskgraph;
+			try {
+				diskgraph = Item_get.getInstance().getDiskInfo(hostid,token);
+				for(int i=0;i<diskgraph.size();i++) {
+					System.out.println(diskgraph.get(i).lastValue);
+				}
+				request.setAttribute("GraphDisk", diskgraph);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         	// Khởi tạo đối tượng Disk với tên ổ đĩa và phần trăm đã sử dụng(test)
 //        	Disk diskgraph = new Disk("Ổ C", "65");
 
         	// Đặt đối tượng vào request
-        	request.setAttribute("GraphDisk", diskgraph);
+        	
             
         } else {
 //            request.setAttribute("ErrorMessage", "Không tìm thấy tham số phù hợp!");

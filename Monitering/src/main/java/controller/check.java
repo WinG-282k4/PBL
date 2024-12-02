@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -10,11 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import DLL.ZabbixAPI.Event;
 import DLL.ZabbixAPI.Host_CRUD;
 import DLL.ZabbixAPI.Host_group_CRUD;
 import DLL.ZabbixAPI.Item_get;
 import Model.Host;
 import Model.Host_Group;
+import Model.Problem;
 
 /**
  * Servlet implementation class check
@@ -92,15 +95,31 @@ public class check extends HttpServlet {
 				}
 			}else if(action.equals("listgrouphost")) {
 				request.getRequestDispatcher("getListHostGroup").forward(request, response);
-			}else if(action.equals("detailDevice")) {
+			}else if(action.equals("graph")) {
 				request.getRequestDispatcher("controller.C_Graph").forward(request, response);
+				
+			}else if(action.equals("detailDevice")) {
+				request.getRequestDispatcher("detailDevice").forward(request, response);
+				
 			}else if(action.equals("problemhostid")) {
 				request.getRequestDispatcher("problemhostid").forward(request, response);
 			}else if(action.equals("problem")) {
 				request.getRequestDispatcher("problem").forward(request, response);
 			}else if(action.equals("updateproblem")) {
 				String proID=request.getParameter("eventid");
-				
+				List<Problem> list=Event.getInstance().getProblems(token);
+				Problem problem=null;
+				for(int i=0;i<list.size();i++) {
+					if(list.get(i).getEventId().equals(proID)) {
+						problem=list.get(i);
+					}
+				}
+				try {
+					request.setAttribute("problem", problem);
+					request.getRequestDispatcher("updateProblem.jsp").forward(request, response);
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			else {
 				response.sendRedirect("login.jsp");

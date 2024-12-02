@@ -35,8 +35,8 @@ public class problem extends HttpServlet {
 		String destination = "/Problem.jsp";
 		String proID = request.getParameter("proID");
 		
-		if(proID.isEmpty()) {
-			List<Problem> problem = Event.getInstance().getProblems(Item_get.getToken());
+		if(proID==null) {
+			List<Problem> problem = Event.getInstance().getProblems((String) request.getSession().getAttribute("token"));
 			request.setAttribute("list", problem);
 		}else {
 			int seversity =Integer.parseInt(request.getParameter("seversity"));

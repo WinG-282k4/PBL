@@ -5,15 +5,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Device Information</title>
+    <title>Search Hosts</title>
     <style>
-        /* Basic Styling */
+        /* Body and font settings */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            color: #333;
+            background-color: #f4f4f4;
         }
 
         /* Sidebar Styling */
@@ -52,60 +51,34 @@
             font-size: 24px;
             font-weight: bold;
             color: #333;
-            text-align: center;
         }
 
-        /* Table Styling */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
 
         table, th, td {
-            border: 1px solid #ddd;
+            border: 1px solid black;
         }
 
         th, td {
-            padding: 12px;
+            padding: 10px;
             text-align: left;
         }
 
         th {
             background-color: #f2f2f2;
-            color: #333;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        /* Button Styling */
-        .actions {
-            margin-top: 15px;
-            text-align: center;
         }
 
         .actions a {
-            padding: 8px 12px;
             margin-right: 10px;
-            text-decoration: none;
-            background-color: #4881c2;
-            color: white;
-            border-radius: 4px;
-            font-size: 14px;
         }
 
-        .actions a:hover {
-            background-color: #34679e;
-        }
-
-        .delete {
-            background-color: #f44336;
-        }
-
-        .delete:hover {
-            background-color: #d32f2f;
+        /* Error message */
+        .error {
+            color: red;
+            font-weight: bold;
         }
 
         /* Responsive Design */
@@ -122,8 +95,8 @@
         }
     </style>
     <script>
-        function doDelete(id){
-            if(confirm("Bạn có chắc chắn muốn xóa ID = " + id)){
+        function doDelete(id) {
+            if (confirm("Bạn có chắc chắn muốn xóa host với ID = " + id)) {
                 window.location = "check?action=deletehost&id=" + id;
             }
         }
@@ -141,55 +114,60 @@
 
     <!-- Main Content -->
     <div class="content">
-        <h1>Host Information</h1>
-        
-        <c:forEach items="${requestScope.list}" var="data">
-            <table>
-                <tr>
-                    <th>Host Name</th>
-                    <td>${data.getHostName()}</td>
-                </tr>
-                <tr>
-                    <th>Host ID</th>
-                    <td>${data.getHostid()}</td>
-                </tr>
-                <tr>
-                    <th>Host IP</th>
-                    <td>${data.getHostIP()}</td>
-                </tr>
-                <tr>
-                    <th>Group ID</th>
-                    <td>${data.getGroupid()}</td>
-                </tr>
-                <tr>
-                    <th>Group Name</th>
-                    <td>${data.getGroupname()}</td>
-                </tr>
-                <tr>
-                    <th>SNMP</th>
-                    <td>${data.getSNMP()}</td>
-                </tr>
-                <tr>
-                    <th>SNMP Community</th>
-                    <td>${data.getSNMP_community()}</td>
-                </tr>
-                <tr>
-                    <th>SNMP Version</th>
-                    <td>${data.getSNMP_version()}</td>
-                </tr>
-                <tr>
-                    <th>Description</th>
-                    <td>${data.getDescription()}</td>
-                </tr>
-            </table>
+        <h1>Search Hosts</h1>
 
-            <div class="actions">
-                <a href="check?action=detailDevice&ID=${data.getHostid()}">Detail</a>
-                <a href="#" class="delete" onclick="doDelete('${data.getHostid()}')">Delete</a>
-                <a href="check?action=updatehost&hostid=${data.getHostid()}">Update</a>
-                <a href="check?action=problemhostid&hostid=${data.getHostid()}">Problem</a>
+        <!-- Search Form -->
+        <form method="GET" action="getthongtin">
+            <div>
+                <label for="groupHost">Search by Group Host:</label>
+                <input type="text" name="groupHost" id="groupHost" placeholder="Enter Group Host Name" />
             </div>
-        </c:forEach>
+            <br>
+            <div>
+                <label for="hostName">Search by Host Name:</label>
+                <input type="text" name="hostName" id="hostName" placeholder="Enter Host Name" />
+            </div>
+            <br>
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Search Results -->
+        <c:choose>
+            <c:when test="${not empty list}">
+                <h2>Search Results</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Host Name</th>
+                            <th>Host ID</th>
+                            <th>Host IP</th>
+                            <th>Group Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${list}" var="host">
+                            <tr>
+                                <td>${host.getHostName()}</td>
+                                <td>${host.getHostid()}</td>
+                                <td>${host.getHostIP()}</td>
+                                <td>${host.getGroupname()}</td>
+                                <td>
+                                    <a href="check?action=graph&ID=${host.getHostid()}">Graph</a>
+                                    <a href="check?action=detailDevice&ID=${host.getHostid()}">Item</a>
+                                    <a href="#" onclick="doDelete('${host.getHostid()}')">Delete</a>
+                                    <a href="check?action=updatehost&hostid=${host.getHostid()}">Update</a>
+                                    <a href="check?action=problemhostid&hostid=${host.getHostid()}">Problem</a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </c:when>
+            <c:otherwise>
+                <p>No hosts found. Please try again.</p>
+            </c:otherwise>
+        </c:choose>
     </div>
 </body>
 </html>
