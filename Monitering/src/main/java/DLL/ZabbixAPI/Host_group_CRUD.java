@@ -137,7 +137,6 @@ public class Host_group_CRUD {
 	    }
 	}
 
-	//Hàm lấy các group
 	// Hàm lấy danh sách các group và các host trong từng group
 	public List<Host_Group> Get_Groups(String authToken) {
 	    List<Host_Group> rs = new ArrayList<Host_Group>();
@@ -224,4 +223,5 @@ public class Host_group_CRUD {
 			}
 	    	return rs;
 	    }
+
 }

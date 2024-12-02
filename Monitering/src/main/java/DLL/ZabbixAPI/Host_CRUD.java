@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import Model.Device;
 import Model.Disk;
 import Model.Host;
+import Model.Host_Group;
 
 //Lớp thêm xóa sử các host, show thông tin tổng quát của host
 public class Host_CRUD {
@@ -384,5 +385,18 @@ public class Host_CRUD {
 			return jsonResponseInterface.getJSONArray("result").getJSONObject(0);
 		else return null;
     }
+    
+    //Tìm kiểm host thuộc host group
+    public List<Host> searchHostofHG(String token, String nameHG){
+    	List<Host> rs = new ArrayList<Host>();
+    	List<Host_Group> hostgroup = Host_group_CRUD.getInstance().Get_Groups(token);
+		for (Host_Group hg : hostgroup) {
+			if (hg.getName().contains(nameHG)) {
+				rs.addAll( hg.getHosts());
+			}
+		}
+    	return rs;
+    }
+    
 }
 

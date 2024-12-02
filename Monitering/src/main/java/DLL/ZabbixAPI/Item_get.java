@@ -15,7 +15,6 @@ import org.json.JSONObject;
 
 import Model.Disk;
 import Model.Item;
-import io.github.hengyunabc.zabbix.api.ZabbixApi;
 
 public class Item_get {
 	

@@ -1,134 +1,290 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Device Information</title>
-    <script>
-        function doDelete(id){
-            if(confirm("bạn có chắc chắn muốn xóa id = "+id)){
-                window.location="check?action=deletehost&id="+id;
-            }
-        }
-    </script>
-    <style>
-        /* Body and font settings */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
+    <title>Document</title>
+    <link rel="stylesheet" href="CSS/index2.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header-title">
+        <nav
+          class="sidebar-nav-toggle"
+          role="navigation"
+          aria-label="Sidebar control"
+        >
+          <button
+            type="button"
+            class="btn-icon zi-menu"
+            title="Show sidebar"
+            id="sidebar-button-toggle"
+          ></button>
+        </nav>
+        <div><h1 id="page-title-general">Problems</h1></div>
+      </header>
+      <main>
+        <div
+          id="monitoring_problem_filter"
+          class="filter-container tabfilter-container filter-space"
+          data-disable-initial-check="1"
+          data-accessible="1"
+          data-profile-idx="web.monitoring.problem"
+          data-profile-idx2="0"
+        >
+          <div class="tabfilter-content-container">
+            <div class="tabfilter-tabs-container">
+              <div id="tabfilter_0">
+                <form
+                  method="post"
+                  action="zabbix.php"
+                  accept-charset="utf-8"
+                  name="zbx_filter"
+                >
+                  <div class="table filter-forms">
+                    <div class="cell">
+                      <ul class="table-forms">
+                        <li>
+                          <div class="table-forms-td-left">
+                            <label for="groupids_0_ms">Host groups</label>
+                          </div>
+                          <div class="table-forms-td-right">
+                            <div class="multiselect-control">
+                              <div
+                                id="groupids_0"
+                                class="multiselect"
+                                role="application"
+                                data-params='{"objectOptions":{"with_hosts":1,"enrich_parent_groups":1},"id":"groupids_0","object_name":"hostGroup","name":"groupids[]","data":[],"popup":{"parameters":{"srctbl":"host_groups","srcfld1":"groupid","dstfrm":"zbx_filter","dstfld1":"groupids_0","multiselect":1,"real_hosts":1,"enrich_parent_groups":1}},"url":"jsrpc.php?type=11&amp;method=multiselect.get&amp;object_name=hostGroup&amp;with_hosts=1&amp;enrich_parent_groups=1"}'
+                                style="width: 300px"
+                              >
+                                <div class="selected">
+                                  <ul class="multiselect-list"></ul>
+                                </div>
+                                <input
+                                  id="groupids"
+                                  class="input"
+                                  type="text"
+                                  autocomplete="off"
+                                  placeholder="type here to search"
+                                  aria-label="Host groups. type here to search"
+                                  aria-required="false"
+                                />
+                              </div>
+                              <ul class="btn-split">
+                              </ul>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="table-forms-td-left">
+                            <label for="hostids_0_ms">Hosts</label>
+                          </div>
+                          <div class="table-forms-td-right">
+                            <div class="multiselect-control">
+                              <div
+                                id="hostids_0"
+                                class="multiselect"
+                                role="application"
+                                data-params='{"objectOptions":{},"id":"hostids_0","object_name":"hosts","name":"hostids[]","data":[],"popup":{"filter_preselect":{"id":"groupids_0","submit_as":"groupid"},"parameters":{"multiselect":1,"srctbl":"hosts","srcfld1":"hostid","dstfrm":"zbx_filter","dstfld1":"hostids_0"}},"url":"jsrpc.php?type=11&amp;method=multiselect.get&amp;object_name=hosts"}'
+                                style="width: 300px"
+                              >
+                                <input
+                                  id="hostids"
+                                  class="input"
+                                  type="text"
+                                  autocomplete="off"
+                                  placeholder="type here to search"
+                                  aria-label="Hosts. type here to search"
+                                  aria-required="false"
+                                />
+                              </div>
+                              <ul class="btn-split">
+                                
+                              </ul>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="filter-forms form-buttons">
+                    <button type="submit" name="filter_apply" value="1">Apply</button
+                    ><button
+                      type="reset"
+                      name="filter_reset"
+                      value="1"
+                      class="btn-alt"
+                      onclick="deldata()"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            
+          </div>
+      
+        </div>
+        <div
+          class="flickerfreescreen"
+          data-timestamp="1733063718"
+          id="flickerfreescreen_problem"
+        >
+          <form
+            method="post"
+            action=""
+            accept-charset="utf-8"
+            id="problem_form"
+            name="problem"
+          >
+            <table class="list-table" id="t674c74265fb06583012183">
+              <thead>
+                <tr>
+                  <th class="cell-width right">
+                    <a
+                      href=""
+                      >Time<span class="arrow-down"></span
+                    ></a>
+                  </th>
+                  <th class="timeline-th"></th>
+                  <th class="timeline-th"></th>
+                  <th>
+                    <a
+                      href=""
+                      >Severity</a
+                    >
+                  </th>
+                  <th class="cell-width"></th>
+                  <th>Status</th>
+                  <th>
+                    <a
+                      href=""
+                      >Host</a
+                    >
+                  </th>
+                  <th>
+                    <a
+                      href=""
+                      >Problem</a
+                    >
+                  </th>
+                  <th>Update</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <c:forEach items="${requestScope.list }" var="data">
+                <tr>
+                  <td class="timeline-date">
+                    ${data.getClock()}
+                  </td>
+                  <td class="timeline-axis timeline-dot"></td>
+                  <td class="timeline-td"></td>
+                  <td class="high-bg">${data.getSeverity()}</td>
+                  <td></td>
+                  <td><span class="problem-unack-fg">PROBLEM</span></td>
+                  <td>
+                    <a
+                      class="link-action wordbreak"
+                      data-menu-popup='{"type":"host","data":{"hostid":"10646"}}'
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      role="button"
+                      href="check?action="
+                      >${data.getHName()}</a
+                    >
+                  </td>
+                  <td>
+                    <div
+                      class="link-action wordbreak"
+                      >${data.getName()}</div
+                    >
+                  </td>
 
-        /* Sidebar Styling */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 220px;
-            background-color: #2f4f7f;
-            color: white;
-            padding-top: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
+                  <td>
+                    <a
+                      class="link-alt"
+                      data-eventid="5606"
 
-        .sidebar a {
-            display: block;
-            padding: 15px;
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            margin: 5px 0;
-        }
+                      role="button"
+                      href="check?action=updateproblem&evenid=${data.getEventId()}"
+                      >Update</a
+                    >
+                  </td>
+                  <td> ${data.getAction().size()} action </td>
+                  
+                </tr>
+                  </c:forEach>
+              </tbody>
+            </table>
+            <div class="table-paging">
+              <nav
+                class="paging-btn-container"
+                role="navigation"
+                aria-label="Pager"
+              >
+                <div class="table-stats">Displaying 11 of 11 found</div>
+              </nav>
+            </div>
 
-        .sidebar a:hover {
-            background-color: #4a6ea9;
-        }
-
-        /* Content Area */
-        .content {
-            margin-left: 240px; /* Space for the sidebar */
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        p {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
-
-        /* Error message */
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-
-            .content {
-                margin-left: 0;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <a href="check?action=listgrouphost">List Group Host</a>
-        <a href="check?action=addhost">Add Host</a>
-        <a href="check?action=problem">List Problem</a>
-        <a href="check?action=updatehost">Update Host</a>
-        <a href="check?action=problemhostid">Problem Host ID</a>
-    </div>
-
-    <!-- Main Content -->
-    <div class="content">
-        <c:forEach items="${requestScope.list }" var="data">
-            <h1>Host Information</h1>
-
-            <p>Event ID: ${data.getEventId()}</p>
-            <p>Name: ${data.getName()}</p>
-            <p>Hostname: ${data.getHid()}</p>
-            <p>Host ID: ${data.getHName()}</p>
-            <p>Severity: ${data.getSeverity()}</p>
-            <p>Clock: ${data.getClock()}</p>
-            <p>Acknowledged Clock: ${data.getAckClock()}</p>
-            <p>Acknowledged: ${data.isAcknowledged()}</p>
-
-            <h3>Actions</h3>
+          </form>
+        </div>
+        <div
+          hidden=""
+          class="overlay-dialogue notif ui-draggable"
+          style="display: none; right: 10px; top: 10px"
+        >
+          <div class="overlay-dialogue-header cursor-move ui-draggable-handle">
             <ul>
-                <c:forEach items="${data.getAction()}" var="list1">
-                    <li>Message: ${list1.getMessage()}, Clock: ${list1.getClock()}, Old Severity: ${list1.get_old()}, New Severity: ${list1.get_new()}</li>
-                </c:forEach>
+              <li>
+                <button
+                  title="Snooze for Admin"
+                  class="btn-icon zi-bell"
+                ></button>
+              </li>
+              <li>
+                <button
+                  title="Mute for Admin"
+                  class="btn-icon zi-speaker"
+                ></button>
+              </li>
             </ul>
+            <button
+              title="Close"
+              type="button"
+              class="btn-overlay-close"
+            ></button>
+          </div>
+          <ul class="notif-body"></ul>
+        </div>
+      </main>
+      <output
+        id="msg-global-footer"
+        class="msg-global-footer msg-warning"
+        style="left: 185px; width: 527px"
+      ></output>
+      <footer role="contentinfo">
+        Zabbix 7.0.5. © 2001–2024,
+        <a
+          class="grey link-alt"
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.zabbix.com/"
+          >Zabbix SIA</a
+        >
+      </footer>
 
-            <br/>
-            <a href="check?action=updateproblem&eventid=${data.getEventId()}">Update</a>
-        </c:forEach>
     </div>
-</body>
+    <script>
+      function deldata() {
+        document.getElementById("groupids").value = "";
+        document.getElementById("hostids").value = "";
+      }
+    </script>
+  </body>
 </html>
+

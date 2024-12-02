@@ -120,6 +120,10 @@ public class check extends HttpServlet {
 				}catch (Exception e) {
 					e.printStackTrace();
 				}
+				
+			}else if(action.equals("index2")) {
+				request.getRequestDispatcher("index2.jsp").forward(request, response);
+				
 			}
 			else {
 				response.sendRedirect("login.jsp");

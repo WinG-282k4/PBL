@@ -410,6 +410,7 @@ public class Event {
 
   		    return problems;
   		}
+
   	//Lấy proplem của 1 groups
   		public List<Problem> getProblems1Group(String authToken, String GroupId) {
   			//Tạo list trả v�?
