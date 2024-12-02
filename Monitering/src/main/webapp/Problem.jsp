@@ -183,7 +183,7 @@
                       data-eventid="5606"
 
                       role="button"
-                      href="check?action=updateproblem&evenid=${data.getEventId()}"
+                      href="check?action=updateproblem&eventid=${data.getEventId()}"
                       >Update</a
                     >
                   </td>
@@ -199,7 +199,7 @@
                 role="navigation"
                 aria-label="Pager"
               >
-                <div class="table-stats">Displaying 11 of 11 found</div>
+                <div class="table-stats">Displaying ${requestScope.list.size() } problem</div>
               </nav>
             </div>
 

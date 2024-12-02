@@ -56,7 +56,6 @@
 
         /* Content Area */
         .content {
-            margin-left: 240px; /* Space for the sidebar */
             padding: 20px;
         }
 
@@ -116,7 +115,7 @@
 
 <body>
 
-    <!-- Sidebar -->
+    <!-- Sidebar
     <div class="sidebar">
         <a href="check?action=listgrouphost">List Group Host</a>
         <a href="check?action=addhost">Add Host</a>
@@ -124,8 +123,8 @@
         <a href="check?action=updatehost">Update Host</a>
         <a href="check?action=problemhostid">Problem Host ID</a>
     </div>
-
-    <!-- Main Content -->
+	-->
+	    <!-- Main Content -->
     
     <div class="content">
         <h1>Update Host</h1>
