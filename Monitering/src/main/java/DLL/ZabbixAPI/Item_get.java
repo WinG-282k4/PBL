@@ -38,6 +38,11 @@ public class Item_get {
 	public static void setToken(String token) {
 		Token = token;
 	}
+	
+	public static void main(String[] args) {
+        String token = Item_get.getInstance().authenticate("Admin", "zabbix");
+        System.out.println(token);
+	}
 
 	private static String ZABBIX_API_URL = "http://10.10.50.239/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.29.193/zabbix/api_jsonrpc.php";

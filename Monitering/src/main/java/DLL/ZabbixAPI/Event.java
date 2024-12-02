@@ -49,7 +49,7 @@ public class Event {
 			System.out.print("\n");
 		}
 	}
-	
+		
 	//Hàm lấy các vấn đ�? hiện tại
 	public List<Problem> getProblems(String authToken) {
 		//Tạo list trả v�?

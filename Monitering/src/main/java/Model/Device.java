@@ -21,7 +21,7 @@ public class Device {
 	public Device( String name, String id, String IP, Item SNMP_avai, Item CPUul, Item receive, Item send, Item R_t, Item R_us, Item R_ut, Item hard, Item net, List<Disk> LD ) {
 		Name = name;
 		this.hostid = id;
-		this.hostIP = IP;
+		this.hostIP = IP	;
 		SNMP = SNMP_avai;
 		CPU = CPUul;
 		this.bitReceive = receive;
