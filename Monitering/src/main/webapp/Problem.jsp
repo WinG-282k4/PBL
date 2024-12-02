@@ -78,35 +78,7 @@
                             </div>
                           </div>
                         </li>
-                        <li>
-                          <div class="table-forms-td-left">
-                            <label for="hostids_0_ms">Hosts</label>
-                          </div>
-                          <div class="table-forms-td-right">
-                            <div class="multiselect-control">
-                              <div
-                                id="hostids_0"
-                                class="multiselect"
-                                role="application"
-                                data-params='{"objectOptions":{},"id":"hostids_0","object_name":"hosts","name":"hostids[]","data":[],"popup":{"filter_preselect":{"id":"groupids_0","submit_as":"groupid"},"parameters":{"multiselect":1,"srctbl":"hosts","srcfld1":"hostid","dstfrm":"zbx_filter","dstfld1":"hostids_0"}},"url":"jsrpc.php?type=11&amp;method=multiselect.get&amp;object_name=hosts"}'
-                                style="width: 300px"
-                              >
-                                <input
-                                  id="hostids"
-                                  class="input"
-                                  type="text"
-                                  autocomplete="off"
-                                  placeholder="type here to search"
-                                  aria-label="Hosts. type here to search"
-                                  aria-required="false"
-                                />
-                              </div>
-                              <ul class="btn-split">
-                                
-                              </ul>
-                            </div>
-                          </div>
-                        </li>
+                     
                       </ul>
                     </div>
                   </div>

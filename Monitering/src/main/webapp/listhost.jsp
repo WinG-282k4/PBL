@@ -53,7 +53,7 @@
               <div id="tabfilter_0">
                 <form
                   method="get"
-                  action="gethongtin"
+                  action="getthongtin"
                   accept-charset="utf-8"
                   name="zbx_filter"
                 >
@@ -81,6 +81,36 @@
                                   class="input"
                                   type="text"
                                   name = "groupHost"
+                                  autocomplete="off"
+                                  placeholder="type here to search"
+                                  aria-label="Host groups. type here to search"
+                                  aria-required="false"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                             <li>
+                          <div class="table-forms-td-left">
+                            <label for="groupids_0_ms">Host name</label>
+                          </div>
+                          <div class="table-forms-td-right">
+                            <div class="multiselect-control">
+                              <div
+                                id="groupids_0"
+                                class="multiselect"
+                                role="application"
+                                data-params='{"objectOptions":{"with_hosts":1,"enrich_parent_groups":1},"id":"groupids_0","object_name":"hostGroup","name":"groupids[]","data":[{"name":"22tdt3","id":"22"}],"popup":{"parameters":{"multiselect":"1","srctbl":"host_groups","srcfld1":"groupid","dstfrm":"zbx_filter","dstfld1":"groupids_0","real_hosts":1,"enrich_parent_groups":1}},"url":"jsrpc.php?type=11&amp;method=multiselect.get&amp;object_name=hostGroup&amp;with_hosts=1&amp;enrich_parent_groups=1"}'
+                                style="width: 300px"
+                              >
+                                <div class="selected">
+                                  <ul class="multiselect-list"></ul>
+                                </div>
+                                <input
+                                  id="groupids_0_ms"
+                                  class="input"
+                                  type="text"
+                                  name = "hostName"
                                   autocomplete="off"
                                   placeholder="type here to search"
                                   aria-label="Host groups. type here to search"

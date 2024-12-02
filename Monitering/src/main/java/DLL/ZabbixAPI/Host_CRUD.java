@@ -398,5 +398,15 @@ public class Host_CRUD {
     	return rs;
     }
     
+ // Lấy thông tin các host hiện có
+    public Host get1Hosts(String authToken,String hostid)  {
+    	List<Host> lhost = getHosts(authToken);
+    	for(Host host : lhost) {
+    		if(host.getHostid().equals(hostid)) {
+    			return host;
+    		}
+    	}
+        return null;
+    }
 }
 
