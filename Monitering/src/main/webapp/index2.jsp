@@ -48,7 +48,9 @@
           class="logo"
           href="components/dashboard/dashboad.html"
           target="main-content"
-          >
+          ><div class="zabbix-logo-sidebar"></div>
+          <div class="zabbix-logo-sidebar-compact"></div
+        >
         </a>
       
       </div>
