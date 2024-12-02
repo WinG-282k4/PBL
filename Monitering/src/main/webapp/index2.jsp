@@ -18,7 +18,27 @@
         width: 100%;
         height: 100%;
         border: none;
-      }
+      } 
+      .menuhandle {
+  background: #0e354d; /* Màu nền mặc định */
+  border-left-color: transparent;
+  color: #ffffff;
+  position: relative;
+  display: block;
+  padding: 12px 14px 12px 44px;
+  font-size: 14px;
+  line-height: inherit;
+  white-space: nowrap;
+  border-left: 3px solid transparent;
+  transition: color 0.3s, border-color 0.3s, background-color 0.3s;
+}
+
+/* Thêm hiệu ứng hover */
+.menuhandle:hover {
+  background: #092637; /* Màu nền khi hover */
+  color: #ecf0f1; /* Màu chữ khi hover */
+}
+      
     </style>
   </head>
   <body>
@@ -28,31 +48,9 @@
           class="logo"
           href="components/dashboard/dashboad.html"
           target="main-content"
-          ><div class="zabbix-logo-sidebar"></div>
-          <div class="zabbix-logo-sidebar-compact"></div
-        ></a>
-        <div class="sidebar-header-buttons">
-          <button
-            type="button"
-            class="btn-icon zi-chevron-double-left js-sidebar-mode button-compact"
-            title="Collapse sidebar"
-          ></button
-          ><button
-            type="button"
-            class="btn-icon zi-chevron-double-right js-sidebar-mode button-expand"
-            title="Expand sidebar"
-          ></button
-          ><button
-            type="button"
-            class="btn-icon zi-collapse js-sidebar-mode button-hide"
-            title="Hide sidebar"
-          ></button
-          ><button
-            type="button"
-            class="btn-icon zi-expand js-sidebar-mode button-show"
-            title="Show sidebar"
-          ></button>
-        </div>
+          >
+        </a>
+      
       </div>
       <div class="server-name" style="width: auto; max-width: 175px">
         myubuntu
@@ -62,14 +60,16 @@
           <ul class="menu-main" style="position: static">
             <li id="dashboard" class="is-selected">
               <a
-                class="zi-dashboards"
+   
                 href="components/dashboard/dashboad.html"
                 target="main-content"
                 >Dashboards</a
               >
             </li>
             <li id="view" class="has-submenu is-expanded">
-              <a class="zi-monitoring" href="#">Monitoring</a>
+              <div class="menuhandle">Monitoring</div>
+
+
               <ul class="submenu" style="max-height: 153px">
                 <li>
                   <a
@@ -95,7 +95,9 @@
               </ul>
             </li>
             <li id="config" class="has-submenu is-expanded">
-              <a class="zi-data-collection" href="#">Data collection</a>
+             <div class="menuhandle">Data collection</div>
+
+
               <ul class="submenu" style="max-height: 214px">
                 <li>
                   <a

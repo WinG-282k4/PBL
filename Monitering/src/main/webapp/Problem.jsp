@@ -35,71 +35,7 @@
           data-profile-idx="web.monitoring.problem"
           data-profile-idx2="0"
         >
-          <div class="tabfilter-content-container">
-            <div class="tabfilter-tabs-container">
-              <div id="tabfilter_0">
-                <form
-                  method="post"
-                  action="zabbix.php"
-                  accept-charset="utf-8"
-                  name="zbx_filter"
-                >
-                  <div class="table filter-forms">
-                    <div class="cell">
-                      <ul class="table-forms">
-                        <li>
-                          <div class="table-forms-td-left">
-                            <label for="groupids_0_ms">Host groups</label>
-                          </div>
-                          <div class="table-forms-td-right">
-                            <div class="multiselect-control">
-                              <div
-                                id="groupids_0"
-                                class="multiselect"
-                                role="application"
-                                data-params='{"objectOptions":{"with_hosts":1,"enrich_parent_groups":1},"id":"groupids_0","object_name":"hostGroup","name":"groupids[]","data":[],"popup":{"parameters":{"srctbl":"host_groups","srcfld1":"groupid","dstfrm":"zbx_filter","dstfld1":"groupids_0","multiselect":1,"real_hosts":1,"enrich_parent_groups":1}},"url":"jsrpc.php?type=11&amp;method=multiselect.get&amp;object_name=hostGroup&amp;with_hosts=1&amp;enrich_parent_groups=1"}'
-                                style="width: 300px"
-                              >
-                                <div class="selected">
-                                  <ul class="multiselect-list"></ul>
-                                </div>
-                                <input
-                                  id="groupids"
-                                  class="input"
-                                  type="text"
-                                  autocomplete="off"
-                                  placeholder="type here to search"
-                                  aria-label="Host groups. type here to search"
-                                  aria-required="false"
-                                />
-                              </div>
-                              <ul class="btn-split">
-                              </ul>
-                            </div>
-                          </div>
-                        </li>
-                     
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="filter-forms form-buttons">
-                    <button type="submit" name="filter_apply" value="1">Apply</button
-                    ><button
-                      type="reset"
-                      name="filter_reset"
-                      value="1"
-                      class="btn-alt"
-                      onclick="deldata()"
-                    >
-                      Reset
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-            
-          </div>
-      
+       
         </div>
         <div
           class="flickerfreescreen"
