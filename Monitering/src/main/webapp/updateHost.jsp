@@ -116,7 +116,7 @@
 
 <body>
 
-    <!-- Sidebar -->
+    <!-- Sidebar
     <div class="sidebar">
         <a href="check?action=listgrouphost">List Group Host</a>
         <a href="check?action=addhost">Add Host</a>
@@ -124,6 +124,7 @@
         <a href="check?action=updatehost">Update Host</a>
         <a href="check?action=problemhostid">Problem Host ID</a>
     </div>
+    -->
 
     <!-- Main Content -->
     <div class="content">

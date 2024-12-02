@@ -92,7 +92,7 @@ public class check extends HttpServlet {
 				}
 			}else if(action.equals("listgrouphost")) {
 				request.getRequestDispatcher("getListHostGroup").forward(request, response);
-			}else if(action.equals("detailDevice")) {
+			}else if(action.equals("graph")) {
 				request.getRequestDispatcher("controller.C_Graph").forward(request, response);
 			}else if(action.equals("problemhostid")) {
 				request.getRequestDispatcher("problemhostid").forward(request, response);
@@ -100,6 +100,9 @@ public class check extends HttpServlet {
 				request.getRequestDispatcher("problem").forward(request, response);
 			}else if(action.equals("updateproblem")) {
 				String proID=request.getParameter("eventid");
+				
+			}else if(action.equals("index2")) {
+				request.getRequestDispatcher("index2.jsp").forward(request, response);
 				
 			}
 			else {
