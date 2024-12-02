@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import DLL.ZabbixAPI.DrawGraph;
 import DLL.ZabbixAPI.Host_CRUD;
-import DLL.ZabbixAPI.Item_get;
-import DLL.ZabbixAPI.getInfor;
 import Model.Disk;
 import Model.Host;
 
