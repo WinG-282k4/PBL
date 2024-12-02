@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import DLL.ZabbixAPI.Host_group_CRUD;
 import DLL.ZabbixAPI.Item_get;
+import Model.Host;
 import Model.Host_Group;
 
 /**
@@ -31,7 +33,18 @@ public class getListHostGroup extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String authToken = (String)request.getSession().getAttribute("token");
-		List<Host_Group> list= Host_group_CRUD.getInstance().Get_Groups(authToken);
+		String grouphost=request.getParameter("groupHost");
+		List<Host_Group> list=new ArrayList<>();
+		if(grouphost==null || grouphost.isEmpty()) {
+		list= Host_group_CRUD.getInstance().Get_Groups(authToken);
+		}else {
+			List<Host_Group> groups=Host_group_CRUD.getInstance().Get_Groups(authToken);
+			for(int i=0;i<groups.size();i++) {
+				if(groups.get(i).getName().contains(grouphost)) {
+					list.add(groups.get(i));
+				}
+			}
+		}
 		try {
 			if(list.size()>0) {
 				request.setAttribute("list", list);

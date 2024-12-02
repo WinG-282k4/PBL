@@ -5,10 +5,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Device Information</title>
+    <title>Search Host Groups</title>
     <script>
         function doDelete(id){
-            if(confirm("bạn có chắc chắn muốn xóa id = "+id)){
+            if(confirm("Bạn có chắc chắn muốn xóa group với ID = "+id)){
                 window.location="check?action=deletehostgroup&groupid="+id;
             }
         }
@@ -65,20 +65,27 @@
             margin-bottom: 10px;
         }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
-
         /* Error message */
         .error {
             color: red;
             font-weight: bold;
+        }
+
+        /* Search Form Styling */
+        .search-form {
+            margin-bottom: 20px;
+        }
+
+        .search-form input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        .search-form button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
         }
 
         /* Responsive Design */
@@ -107,23 +114,43 @@
 
     <!-- Main Content -->
     <div class="content">
-        <div class="error">
-            ${requestScope.error}
-        </div>
-        <a href="check?action=addhostgroup">Add Host Group</a>
+        <h1>Search Host Groups</h1>
 
-        <c:forEach items="${requestScope.list}" var="data">
-            <h1>Host GROUP Information</h1>
-            <p>GROUP ID: ${data.getId()}</p>
-            <p>GROUP Name: ${data.getName()}</p>
-            <ul>
-                <c:forEach items="${data.getHosts()}" var="list1">
-                    <li>Host ID: ${list1.getHostid()}, Host Name: ${list1.getHostName()}</li>
+        <!-- Search Form -->
+        <form class="search-form" method="GET" action="getListHostGroup">
+            <div>
+                <label for="groupHost">Search by Group Name:</label>
+                <input type="text" name="groupHost" id="groupHost" placeholder="Enter Group Name" />
+            </div>
+            <br>
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Error message display -->
+        <c:if test="${not empty requestScope.error}">
+            <div class="error">${requestScope.error}</div>
+        </c:if>
+
+        <!-- Search Results -->
+        <c:choose>
+            <c:when test="${not empty list}">
+                <h2>Search Results</h2>
+                <c:forEach items="${list}" var="data">
+                    <p>GROUP ID: ${data.getId()}</p>
+                    <p>GROUP Name: ${data.getName()}</p>
+                    <ul>
+                        <c:forEach items="${data.getHosts()}" var="host">
+                            <li>Host ID: ${host.getHostid()}, Host Name: ${host.getHostName()}</li>
+                        </c:forEach>
+                    </ul>
+                    <a href="#" onclick="doDelete(${data.getId()});">Delete</a> |
+                    <a href="check?action=updatehostgroup&groupid=${data.getId()}">Update</a>
                 </c:forEach>
-            </ul>
-            <a href="#" onclick="doDelete(${data.getId()});">Delete</a> |
-            <a href="check?action=updatehostgroup&groupid=${data.getId()}">Update</a>
-        </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <p>No host groups found. Please try again.</p>
+            </c:otherwise>
+        </c:choose>
     </div>
 </body>
 </html>

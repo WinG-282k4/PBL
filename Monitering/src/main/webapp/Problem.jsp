@@ -127,7 +127,6 @@
             </ul>
 
             <br/>
-            <a href="#" onclick="doDelete(${data.getEventId()});">Delete</a> |
             <a href="check?action=updateproblem&eventid=${data.getEventId()}">Update</a>
         </c:forEach>
     </div>

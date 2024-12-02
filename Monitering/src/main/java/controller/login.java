@@ -36,7 +36,9 @@ public class login extends HttpServlet {
 		if(Item_get.getInstance().authenticate(username, password)!=null) {
 			String token=Item_get.getInstance().authenticate(username, password);
 			session.setAttribute("token", token);
-			response.sendRedirect("getthongtin");
+			response.sendRedirect("check?action=listhost");
+		}else {
+			response.sendRedirect("login.jsp");
 		}
 	}
 

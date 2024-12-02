@@ -111,7 +111,7 @@ public class Item_get {
     }
     
     // Hàm lấy thông tin nhi�?u ổ 
-    List<Disk> getDiskInfo(String hostId, String authToken) throws Exception {
+    public List<Disk> getDiskInfo(String hostId, String authToken) throws Exception {
         JSONObject request = new JSONObject();
         request.put("jsonrpc", "2.0");
         request.put("method", "item.get");
@@ -147,12 +147,12 @@ public class Item_get {
                     if (diskName.contains("%")) {
                         // Giá trị là phần trăm, không cần chia
                     	double lastValue = Double.parseDouble(lastValueStr); // Chuyển đổi sang double
-                        lastValueOutput = String.format("%.2f", lastValue) + " %"; // Lưu lại giá trị phần trăm
+                        lastValueOutput = String.format("%.2f", lastValue); // Lưu lại giá trị phần trăm
                     } else {
                         // Giá trị là dung lượng, chia cho 1024^3 để chuyển đổi thành GB
                         double lastValue = Double.parseDouble(lastValueStr); // Chuyển đổi sang double
                         lastValueInGB = lastValue / (1024 * 1024 * 1024); // Chia để chuyển đổi thành GB
-                        lastValueOutput = String.format("%.2f GB", lastValueInGB); // �?ịnh dạng giá trị ra 2 chữ số thập phân
+                        lastValueOutput = String.format("%.2f", lastValueInGB); // �?ịnh dạng giá trị ra 2 chữ số thập phân
                     }
                 } catch (NumberFormatException e) {
                     // B�? qua các lỗi khi phân tích giá trị

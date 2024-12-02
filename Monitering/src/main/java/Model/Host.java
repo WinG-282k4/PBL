@@ -111,7 +111,7 @@ public class Host {
 		return Description;
 	}
 	
-	public Host(String name, String id) {
+	public Host(String id, String name) {
 		hostName = name;
 		hostid =id;
 	}
