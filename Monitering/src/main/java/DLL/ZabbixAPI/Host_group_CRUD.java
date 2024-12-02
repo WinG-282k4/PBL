@@ -137,7 +137,6 @@ public class Host_group_CRUD {
 	    }
 	}
 
-	//Hàm lấy các group
 	// Hàm lấy danh sách các group và các host trong từng group
 	public List<Host_Group> Get_Groups(String authToken) {
 	    List<Host_Group> rs = new ArrayList<Host_Group>();
@@ -213,15 +212,19 @@ public class Host_group_CRUD {
 	        }
 	        return rs;
 		}
+
 		//Tìm kiểm host thuộc host group
-	    public List<Host> searchHostofHG(String token, String nameHG){
-	    	List<Host> rs = new ArrayList<Host>();
-	    	List<Host_Group> hostgroup = Host_group_CRUD.getInstance().Get_Groups(token);
-			for (Host_Group hg : hostgroup) {
-				if (hg.getName().contains(nameHG)) {
-					rs.addAll( hg.getHosts());
-				}
-			}
-	    	return rs;
-	    }
+			    public List<Host> searchHostofHG(String token, String nameHG){
+			    	List<Host> rs = new ArrayList<Host>();
+			    	List<Host_Group> hostgroup = Host_group_CRUD.getInstance().Get_Groups(token);
+					for (Host_Group hg : hostgroup) {
+						if (hg.getName().contains(nameHG)) {
+							for(Host host : hg.getHosts()) {
+							Host  host1 = Host_CRUD.getInstance().get1Hosts(token, host.getHostid());
+							rs.add(host1);
+							}
+						}
+					}
+			    	return rs;
+			    }
 }
