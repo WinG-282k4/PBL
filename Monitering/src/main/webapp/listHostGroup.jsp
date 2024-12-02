@@ -54,7 +54,7 @@
           ></ul>
           <form
             method="get"
-            action="zabbix.php"
+            action="getListHostGroup"
             accept-charset="utf-8"
             name="zbx_filter"
           >
@@ -80,7 +80,7 @@
                         <input
                           type="text"
                           id="filter_name"
-                          name="filter_name"
+                          name="groupHost"
                           value=""
                           maxlength="255"
                           style="width: 300px"
@@ -167,14 +167,14 @@
                   <a
                     class="js-edit-hostgroup"
                     data-groupid="22"
-                    href=""
+                    href="check?action=updatehostgroup&groupid=${data.getId()}"
                     >${data.getName()}</a
                   >
                 </td>
                 <td class="cell-width">
                   <a
                     class="entity-count"
-                    href="zabbix.php?action=host.list&amp;filter_set=1&amp;filter_groups%5B0%5D=22"
+                    href="check?action=listhost&groupHost=${data.getName()}"
                     >${data.getHosts().size()}</a
                   >
                 </td>
@@ -182,7 +182,7 @@
                   <c:forEach items="${data.getHosts()}" var="list1">
                   <a
                     class="link-alt green"
-                    href=""
+                    href="check?action=updatehost&hostid=${list1.getHostid() }"
                     >${list1.getHostName()}</a
                   >,
                   </c:forEach>

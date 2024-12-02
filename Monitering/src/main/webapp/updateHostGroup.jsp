@@ -44,7 +44,6 @@
 
         /* Content Area */
         .content {
-            margin-left: 240px; /* Space for the sidebar */
             padding: 20px;
         }
 
@@ -60,25 +59,23 @@
         }
 
         input[type="text"] {
-            width: 100%;
+            width: 95%;
             padding: 8px;
             margin: 5px 0;
             border: 1px solid #ccc;
-            border-radius: 4px;
         }
 
         input[type="submit"], input[type="reset"] {
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #0275b8;
             color: white;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
             margin-top: 10px;
         }
 
         input[type="submit"]:hover, input[type="reset"]:hover {
-            background-color: #45a049;
+            background-color: #0b2d42;;
         }
 
         /* Responsive Design */

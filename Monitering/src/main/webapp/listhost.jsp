@@ -55,7 +55,7 @@
               <div id="tabfilter_0">
                 <form
                   method="get"
-                  action="zabbix.php"
+                  action="gethongtin"
                   accept-charset="utf-8"
                   name="zbx_filter"
                 >
@@ -82,6 +82,7 @@
                                   id="groupids_0_ms"
                                   class="input"
                                   type="text"
+                                  name = "groupHost"
                                   autocomplete="off"
                                   placeholder="type here to search"
                                   aria-label="Host groups. type here to search"
@@ -94,27 +95,10 @@
                       </ul>
                     </div>
                   </div>
-                  <button type="submit" class="form-submit-hidden"></button
-                  ><input type="hidden" name="filter_name" value="" /><input
-                    type="hidden"
-                    name="filter_show_counter"
-                    value="0"
-                  /><input
-                    type="hidden"
-                    name="filter_custom_time"
-                    value="0"
-                  /><input type="hidden" name="sort" value="name" /><input
-                    type="hidden"
-                    name="sortorder"
-                    value="ASC"
-                  />
-                </form>
-              </div>
-            </div>
-            <div class="filter-forms form-buttons">
+                   <div class="filter-forms form-buttons">
               <button type="submit" name="filter_apply" value="1">Apply</button
               ><button
-                type="submit"
+                type="reset"
                 name="filter_reset"
                 value="1"
                 class="btn-alt"
@@ -122,6 +106,11 @@
                 Reset
               </button>
             </div>
+                  
+                </form>
+              </div>
+            </div>
+           
           </div>
         <form
           method="post"
@@ -198,6 +187,7 @@
               aria-label="Pager"
             >
               <div class="table-stats">Displaying ${requestScope.list.size()} host</div>
+              <br>
             </nav>
           </div>
         </form>
@@ -236,13 +226,13 @@
         style="left: 185px; width: 527px"
       ></output>
       <footer role="contentinfo">
-        Zabbix 7.0.5. © 2001–2024,
+        PBL4: Giám sát thiết bị mạng
         <a
           class="grey link-alt"
           target="_blank"
           rel="noopener noreferrer"
           href="https://www.zabbix.com/"
-          >Zabbix SIA</a
+          >Nhóm Nguyễn Phan Thanh, Hồ Minh Ngọc, Lê Văn Hòa</a
         >
       </footer>
     </div>
