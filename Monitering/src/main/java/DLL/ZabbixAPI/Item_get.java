@@ -49,7 +49,7 @@ public class Item_get {
 		}
 	}
 
-	private static String ZABBIX_API_URL = "http://10.10.28.117/zabbix/api_jsonrpc.php";
+	private static String ZABBIX_API_URL = "http://10.10.1.180/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.29.193/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.59.231/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.50.254/zabbix/api_jsonrpc.php";
