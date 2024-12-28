@@ -124,6 +124,12 @@ public class check extends HttpServlet {
 			}else if(action.equals("index2")) {
 				request.getRequestDispatcher("index2.jsp").forward(request, response);
 				
+			}else if(action.equals("lastestdata")) {
+				request.getRequestDispatcher("lastestData.jsp").forward(request, response);
+				
+			}else if(action.equals("dashboard")) {
+				request.getRequestDispatcher("dashBoard").forward(request, response);
+				
 			}
 			else {
 				response.sendRedirect("login.jsp");

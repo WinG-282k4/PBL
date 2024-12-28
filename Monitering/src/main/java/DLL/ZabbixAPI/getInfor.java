@@ -199,7 +199,6 @@ public class getInfor {
     public Item getCpuLoad(String hostId) throws IOException {
     	Item rs = Item_get.getInstance().getInfor(hostId,"system.cpu.util" , authToken);
     	float cpuLoad = Float.parseFloat(rs.getValue());
-    	cpuLoad = cpuLoad * 10;
     	rs.setValue(String.format("%.2f%%", cpuLoad));
     	return rs;
         

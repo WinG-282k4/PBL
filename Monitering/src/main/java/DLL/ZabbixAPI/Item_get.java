@@ -41,9 +41,15 @@ public class Item_get {
 	public static void main(String[] args) {
         String token = Item_get.getInstance().authenticate("Admin", "zabbix");
         System.out.println(token);
+        try {
+			getInstance().getFullItem(token);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	private static String ZABBIX_API_URL = "http://10.10.50.239/zabbix/api_jsonrpc.php";
+	private static String ZABBIX_API_URL = "http://10.10.28.117/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.29.193/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.59.231/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.50.254/zabbix/api_jsonrpc.php";
@@ -266,4 +272,28 @@ public class Item_get {
   	            : "No item name found";
   	}
   	
+//Lấy full item
+  	
+  	public String getFullItem(String authToken) throws Exception {
+  	    // Tạo đối tượng request JSON để gửi yêu cầu
+  	    JSONObject request = new JSONObject();
+  	    request.put("jsonrpc", "2.0");
+  	    request.put("method", "item.get");
+  	    request.put("id", 3);
+  	    request.put("auth", authToken);
+  	    request.put("params", new JSONObject()
+  	            .put("output", new JSONArray().put("name").put("itemid")
+  	            		.put("key_")
+  	            		.put("snmp_oid"))
+  	           
+  	    );
+
+  	    // Gửi yêu cầu và nhận phản hồi
+  	    JSONObject response = Item_get.getInstance().sendRequest(request);
+  	    System.out.print(response);
+  	    JSONArray result = response != null ? response.optJSONArray("result") : new JSONArray();
+
+  	    // Trả về tên item nếu tìm thấy, ngược lại trả về "No item name found"
+  	    return result.toString();
+  	}
 }

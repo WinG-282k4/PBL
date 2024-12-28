@@ -35,8 +35,11 @@ public class detailDevice extends HttpServlet {
 		String hostid=request.getParameter("ID");
         String authToken = (String)request.getSession().getAttribute("token");
 		Device dv=getInfor.getInstance().getFull_Infor(hostid,authToken);
+		Host host=Host_CRUD.getInstance().get1Hosts(authToken, hostid);
 		if(dv!=null) {
-			request.setAttribute("data", dv);
+			String name_host=host.getHostName();
+			request.setAttribute("hostname", name_host);
+			request.setAttribute("list", dv);
 			request.getRequestDispatcher("detaildevice.jsp").forward(request, response);
 			
 		}

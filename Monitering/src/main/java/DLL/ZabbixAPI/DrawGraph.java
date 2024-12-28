@@ -155,11 +155,6 @@ public class DrawGraph {
 
 	    // Lấy lịch sử của các itemId (có thể phân loại theo kiểu dữ liệu)
 	    List<Graph> resultsCPU = getHistoryItem(authToken, host.getCPU().getId(), timeFrom, timeNow);
-	    //Xử lý giá trị CPU bị lỗi, x10 mới đúng
-	    for(Graph gr : resultsCPU) {
-	    	if(Double.parseDouble(gr.getValue()) > 10) continue;
-        	gr.setValue(String.valueOf(Double.parseDouble(gr.getValue())*10));
-        	}
 	    List<Graph> resultsRAM = getHistoryItem(authToken, host.getRAM_util().getId(), timeFrom, timeNow);
 	    List<Graph> resultsBitReceive = getHistoryItem(authToken, host.getBitReceive().getId(), timeFrom, timeNow);
 	    List<Graph> resultsBitSend = getHistoryItem(authToken, host.getBitSend().getId(), timeFrom, timeNow);

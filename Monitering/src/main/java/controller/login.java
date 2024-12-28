@@ -37,6 +37,8 @@ public class login extends HttpServlet {
 			String token=Item_get.getInstance().authenticate(username, password);
 			session.setAttribute("token", token);
 			response.sendRedirect("check?action=index2");
+		}else {
+			response.sendRedirect("login.jsp");
 		}
 	}
 

@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Host</title>
+    <title>Update Problem</title>
     <script type="text/javascript">
         function updateGroupName() {
             const select = document.getElementById("Groupid");
@@ -56,7 +56,6 @@
 
         /* Content Area */
         .content {
-            margin-left: 240px; /* Space for the sidebar */
             padding: 20px;
         }
 
@@ -81,16 +80,15 @@
 
         input[type="submit"], input[type="reset"] {
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #0275b8;;
             color: white;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
             margin-top: 10px;
         }
 
         input[type="submit"]:hover, input[type="reset"]:hover {
-            background-color: #45a049;
+            background-color: #0275b8;;
         }
 
         /* Error message */
@@ -116,7 +114,7 @@
 
 <body>
 
-    <!-- Sidebar -->
+    <!-- Sidebar 
     <div class="sidebar">
         <a href="check?action=listgrouphost">List Group Host</a>
         <a href="check?action=addhost">Add Host</a>
@@ -124,17 +122,17 @@
         <a href="check?action=updatehost">Update Host</a>
         <a href="check?action=problemhostid">Problem Host ID</a>
     </div>
-
+-->
     <!-- Main Content -->
     
     <div class="content">
-        <h1>Update Host</h1>
+        <h1>Update Problem</h1>
             <% Problem problem=(Problem)request.getAttribute("problem"); 
             	request.setAttribute("hostid", problem.getHid());
             	%>
         <form action="updateProblem" method="post">
         	Message: <input type="text" name="message"  />
-            EventID : <input type="text" name="eventid" value="${problem.getEventId() }" readonly />
+            <input type="hidden" name="eventid" value="${problem.getEventId() }" readonly />
             Name : <input type="text" name="name" value="${problem.getName() }" readonly/>
             Host ID: <input type="text" name="hostid" value="${problem.getHid() }" readonly/>
             Host Name: <input type="text" name="hostname" value="${problem.getHName()}" readonly/>

@@ -12,6 +12,7 @@
 	<script>
         function doDelete(id) {
             if (confirm("Bạn có chắc chắn muốn xóa host với ID = " + id)) {
+            	window.location="check?action=deletehost&id="+id;
             }
         }
     </script>
@@ -184,7 +185,7 @@
                 <td class="nowrap">${data.getDescription()}</td>                
                 <td>
                   <a
-                    href=""
+                    href="check?action=detailDevice&ID=${data.getHostid()}"
                     >Latest data</a
                   >
                 </td>

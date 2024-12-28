@@ -2694,13 +2694,13 @@ button {
       background: #092637;
       border-left-color: #ffffff;
       color: #ffffff; }
-  .menu-main .submenu::before, .menu-main .submenu::after {
+/*   .menu-main .submenu::before, .menu-main .submenu::after {
     content: '';
     position: absolute;
     right: 0;
     left: 0;
     z-index: 999;
-    box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.35); }
+    box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.35); } */
   .menu-main .submenu::before {
     top: 0; }
   .menu-main .submenu::after {
