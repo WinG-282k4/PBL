@@ -35,35 +35,62 @@ public class Host_CRUD {
         return instance;
     }
     
-    public static void main(String[] args) {
-    	//Laays token
-		String token = Item_get.getInstance().authenticate("Admin", "zabbix");
-		
-//		Host temp = new Host("Thanh_PCSNMP", "10640", "22", "  ", "192.168.0.189", " ", "password", "2", "PC của Thanh");
-		Host temp = new Host("Thanh_Laptop", "10639", "22", "  ", "192.168.0.145", " ", "password", "2", "Laptop của Thanh");
-//		getInstance().getTemplates(token, Item_get.getInstance().getURL());
-		
-//		//Tạo host
-//		String Create_host = getInstance().Create_Host(temp, token);
-//		System.out.print(Create_host);
+//    public static void main(String[] args) {
+//    	//Laays token
+//		String token = Item_get.getInstance().authenticate("Admin", "zabbix");
 //		
-		//Update 1 host
-//		getInstance().Update_Host(temp, token);
-	
-//		//Test xóa host
-//		String rs = getInstance().Delete_Host(temp, token);
-//		System.out.print(rs);
-		
-		//Lấy danh sách device
-		List<Host> hs = getInstance().getHosts(token);
-		System.out.print("\n");
-		
-		//in ra test
-		for(Host H: hs) {
-			H.Display();
-			System.out.print("\n");
-		}
-	}
+////		Host temp = new Host("Thanh_PCSNMP", "10640", "22", "  ", "192.168.0.189", " ", "password", "2", "PC của Thanh");
+//		Host temp = new Host("Thanh_Laptop", "10639", "22", "  ", "192.168.0.145", " ", "password", "2", "Laptop của Thanh");
+////		getInstance().getTemplates(token, Item_get.getInstance().getURL());
+//		
+////		//Tạo host
+////		String Create_host = getInstance().Create_Host(temp, token);
+////		System.out.print(Create_host);
+////		
+//		//Update 1 host
+////		getInstance().Update_Host(temp, token);
+//	
+////		//Test xóa host
+////		String rs = getInstance().Delete_Host(temp, token);
+////		System.out.print(rs);
+//		
+//		//Lấy danh sách device
+//		List<Host> hs = getInstance().getHosts(token);
+//		System.out.print("\n");
+//		
+//		//in ra test
+//		for(Host H: hs) {
+//			H.Display();
+//			System.out.print("\n");
+//		}
+//	}
+    public static void main(String[] args) {
+        // Lấy token xác thực
+        String token = Item_get.getInstance().authenticate("Admin", "zabbix");
+
+        // Lấy danh sách host
+        List<Host> hosts = Host_CRUD.getInstance().getHosts(token);
+
+        // Lặp qua các host và lấy nhiệt độ CPU của từng host
+        for (Host host : hosts) {
+            System.out.println("Host: " + host.name());
+            
+            // Gọi hàm lấy nhiệt độ CPU
+            JSONArray cpuTemperature = Host_CRUD.getInstance().getCpuTemperature(host.id(), token);
+
+            // In ra nhiệt độ CPU
+            if (cpuTemperature.length() > 0) {
+                for (int i = 0; i < cpuTemperature.length(); i++) {
+                    JSONObject item = cpuTemperature.getJSONObject(i);
+                    System.out.println("Item Name: " + item.getString("name"));
+                    System.out.println("Last Value: " + item.getString("lastvalue") + "°C");
+                }
+            } else {
+                System.out.println("Không tìm thấy thông tin nhiệt độ CPU.");
+            }
+        }
+    }
+
     
     //Hàm xoa một host
     public String Delete_Host(Host host, String authtoken) {
@@ -408,5 +435,37 @@ public class Host_CRUD {
     	}
         return null;
     }
+ // Lấy nhiệt độ CPU của một host từ Zabbix
+    public JSONArray getCpuTemperature(String hostId, String authToken) {
+        // Tạo yêu cầu JSON để lấy item liên quan đến nhiệt độ CPU
+        JSONObject request = new JSONObject()
+            .put("jsonrpc", "2.0")
+            .put("method", "item.get")
+            .put("params", new JSONObject()
+                .put("hostids", hostId)  // ID của host
+                .put("output", new JSONArray().put("itemid").put("name").put("lastvalue"))  // Lấy thông tin item
+                .put("search", new JSONObject()
+                    .put("name", "CPU temp")  // Tìm các item có tên chứa "CPU temperature"
+                )
+            )
+            .put("auth", authToken)  // Token xác thực
+            .put("id", 1); // ID của request
+
+        // Gửi yêu cầu và nhận phản hồi
+        JSONObject jsonResponse = null;
+        try {
+            jsonResponse = Item_get.getInstance().sendRequest(request);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Kiểm tra và trả về kết quả
+        if (jsonResponse != null && jsonResponse.has("result")) {
+            return jsonResponse.getJSONArray("result");  // Trả về danh sách các item
+        } else {
+            return new JSONArray();  // Nếu không có kết quả
+        }
+    }
+
 }
 

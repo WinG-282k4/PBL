@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,24 +45,25 @@ public class C_Graph extends HttpServlet {
 
         // Xác thực với Zabbix API
         String token =(String)request.getSession().getAttribute("token");
-
-        List<Host> listhost = Host_CRUD.getInstance().getHosts(token);
-        request.setAttribute("listhost", listhost);
         
+        
+        Host host = Host_CRUD.getInstance().get1Hosts(token,hostid);
+        request.setAttribute("host", host);
+
         // Kiểm tra và xử lý các tham số
         if (hostid != null && !hostid.isEmpty()) {
             // Lấy danh sách đồ thị cho từng item của hostid
             Map<String, String> graphData = DrawGraph.getInstance().getGraphhost(token, hostid, timeFrom, timeTill);
             List<Disk> diskgraph;
-            diskgraph1 = null;
+            List<Disk> diskgraph1 = new ArrayList<Disk>();
 			try {
 				diskgraph = Item_get.getInstance().getDiskInfo(hostid,token);
 				for(int i=0;i<diskgraph.size();i++) {
-					if(diskgraph.get(i).getName().equals("%")) {
+					if(diskgraph.get(i).getName().contains("%")) {
 						diskgraph1.add(diskgraph.get(i));
 					}
 				}
-				request.setAttribute("GraphDisk", diskgraph);
+				request.setAttribute("GraphDisk", diskgraph1);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
