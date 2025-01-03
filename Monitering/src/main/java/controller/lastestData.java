@@ -55,18 +55,30 @@ public class lastestData extends HttpServlet {
              if (groupHost != null && !groupHost.isEmpty() && hostName != null && !hostName.isEmpty()) {
                 List<Host> allHosts = Host_CRUD.getInstance().getHosts(authToken);
                 for (Host host : allHosts) {
+                	System.out.println(host.getHostName());
                     if (host.getGroupname().equals(groupHost) && host.getHostName().equals(hostName)) {
+                    	System.out.println(host.getHostid());
+                        host1=host;
+                    }
+                }
+            // Trường hợp chỉ có Host
+            }else if(hostName != null) {
+                List<Host> allHosts = Host_CRUD.getInstance().getHosts(authToken);
+                for (Host host : allHosts) {
+                    if (host.getHostName().equals(hostName)) {
+                    	System.out.println(host.getHostName());
                         host1=host;
                     }
                 }
             }
+             
              Device device=null;
              if(host1!=null) {
             	 device=getInfor.getInstance().getFull_Infor(host1.getHostid(), authToken);
              }
             
             // Gửi danh sách kết quả về JSP
-             request.setAttribute("hostname", hostName);
+            request.setAttribute("hostname", hostName);
             request.setAttribute("list", device);
             request.getRequestDispatcher("lastestData.jsp").forward(request, response);
 

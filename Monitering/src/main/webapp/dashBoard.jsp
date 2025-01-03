@@ -50,6 +50,59 @@
 	.status-disaster-bg:before {
 	background-color: #e45959;
 }
+/* Tạo màu sắc riêng cho từng mức độ theo bảng màu trong ảnh */
+.severity-not-classified {
+	background-color: #99A9B0; /* Màu xám nhạt */
+	color: #000; /* Màu chữ đen */
+}
+
+.severity-information {
+	background-color: #5A8DEF; /* Màu xanh dương */
+	color: #000; /* Màu chữ đen */
+}
+
+.severity-warning {
+	background-color: #F4CB5B; /* Màu vàng */
+	color: #000; /* Màu chữ đen */
+}
+
+.severity-average {
+	background-color: #F3A256; /* Màu cam nhạt */
+	color: #000; /* Màu chữ đen */
+}
+
+.severity-high {
+	background-color: #E78264; /* Màu cam đậm */
+	color: #000; /* Màu chữ đen */
+}
+
+.severity-disaster {
+	background-color: #E75C4B; /* Màu đỏ */
+	color: #000; /* Màu chữ đen */
+}
+
+.severity-unknown {
+	background-color: #9e9e9e; /* Màu xám cho trường hợp không xác định */
+	color: #fff; /* Màu chữ trắng */
+}
+.box {
+            display: inline-block;
+            padding: 2px 3px; /* Giảm kích thước hộp */
+            border-radius: 3px; /* Bo góc nhẹ */
+            color: white;
+            font-size: 12px; /* Giảm kích thước chữ */
+            font-weight: bold;
+            text-align: center;
+        }
+
+         .low-severity {
+            background-color: #34af67; /* Màu xanh đậm và không sáng */
+        }
+
+        .high-severity {
+            background-color: #d64e4e; /* Màu đỏ đậm và không sáng */
+        }
+/* Tùy chỉnh thêm cho kiểu chữ và kích thước */
 </style>
 </head>
 <body>
@@ -148,7 +201,18 @@
 													<td class="nowrap">${data.getSNMP_version()}</td>
 													<td class="nowrap">${data.getHostIP()}</td>
 													<td class="nowrap">${data.getSNMP_community()}</td>
-													<td class="nowrap">${data.getSNMP()}</td>
+													<td class="nowrap">
+														<!-- Sử dụng JSTL để kiểm tra giá trị severity và thay đổi màu sắc -->
+														<c:choose>
+															<c:when test="${data.getSNMP() == 1}">
+																<div class="box low-severity">SNMP</div>
+															</c:when>
+															<c:when test="${data.getSNMP() == 2}">
+																<div class="box high-severity">SNMP</div>
+															</c:when>
+															
+														</c:choose>
+													</td>
 													<td class="nowrap">${data.getDescription()}</td>
 
 												</tr>
@@ -268,14 +332,30 @@
 													<td class="timeline-date">${data.getClock()}</td>
 													<td class="timeline-axis timeline-dot"></td>
 													<td class="timeline-td"></td>
-													<td class="high-bg">${data.getSeverity()}</td>
+													<td
+														class="${data.getSeverity() == 0 ? 'severity-not-classified' :
+            data.getSeverity() == 1 ? 'severity-information' :
+            data.getSeverity() == 2 ? 'severity-warning' :
+            data.getSeverity() == 3 ? 'severity-average' :
+            data.getSeverity() == 4 ? 'severity-high' :
+            data.getSeverity() == 5 ? 'severity-disaster' : 'severity-unknown'}">
+														<c:choose>
+															<c:when test="${data.getSeverity() == 0}">Not Classified</c:when>
+															<c:when test="${data.getSeverity() == 1}">Information</c:when>
+															<c:when test="${data.getSeverity() == 2}">Warning</c:when>
+															<c:when test="${data.getSeverity() == 3}">Average</c:when>
+															<c:when test="${data.getSeverity() == 4}">High</c:when>
+															<c:when test="${data.getSeverity() == 5}">Disaster</c:when>
+															<c:otherwise>Unknown</c:otherwise>
+														</c:choose>
+													</td>
+
 													<td></td>
 													<td><span class="problem-unack-fg">PROBLEM</span></td>
 													<td><a class="link-action wordbreak"
 														data-menu-popup='{"type":"host","data":{"hostid":"10646"}}'
 														aria-expanded="false" aria-haspopup="true" role="button"
-														href="check?action=">${data.getHName()}</a>
-													</td>
+														href="check?action=">${data.getHName()}</a></td>
 													<td>
 														<div class="link-action wordbreak">${data.getName()}</div>
 													</td>
@@ -284,7 +364,7 @@
 														role="button"
 														href="check?action=updateproblem&eventid=${data.getEventId()}">Update</a>
 													</td>
-													<td>${data.getAction().size()} action</td>
+													<td>${data.getAction().size()}action</td>
 
 												</tr>
 											</c:forEach>

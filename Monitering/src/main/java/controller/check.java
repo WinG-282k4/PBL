@@ -69,12 +69,16 @@ public class check extends HttpServlet {
 				}catch (Exception e) {
 					e.printStackTrace();
 				}
+				
 			}else if(action.equals("listhost")) {
 				response.sendRedirect("getthongtin");
+				
 			}else if(action.equals("addhostgroup")){
 				 request.getRequestDispatcher("addHostGroup.jsp").forward(request, response);
+				 
 			}else if(action.equals("deletehostgroup")) {
 				request.getRequestDispatcher("deleteHostGroup").forward(request, response);
+				
 			}else if(action.equals("updatehostgroup")) {
 				String groupID=request.getParameter("groupid");
 				String authToken = token;
@@ -93,8 +97,10 @@ public class check extends HttpServlet {
 				}catch(Exception e) {
 					e.printStackTrace();
 				}
+				
 			}else if(action.equals("listgrouphost")) {
 				request.getRequestDispatcher("getListHostGroup").forward(request, response);
+				
 			}else if(action.equals("graph")) {
 				request.getRequestDispatcher("controller.C_Graph").forward(request, response);
 				
@@ -103,8 +109,10 @@ public class check extends HttpServlet {
 				
 			}else if(action.equals("problemhostid")) {
 				request.getRequestDispatcher("problemhostid").forward(request, response);
+				
 			}else if(action.equals("problem")) {
 				request.getRequestDispatcher("problem").forward(request, response);
+				
 			}else if(action.equals("updateproblem")) {
 				String proID=request.getParameter("eventid");
 				List<Problem> list=Event.getInstance().getProblems(token);

@@ -19,7 +19,7 @@
     </style>
 </head>
 <body>
-    <h1>Đồ thị cho 1 host</h1>
+    <h1>Đồ thị cho ${host.getHostName() }</h1>
     <%
         // Lấy danh sách đồ thị từ request attribute
         Map<String, String> graphData = (Map<String, String>) request.getAttribute("GraphData");
