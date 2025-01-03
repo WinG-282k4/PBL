@@ -23,6 +23,78 @@ public class Host {
 		return hostName;
 	}
 	
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
+	public String getHostid() {
+		return hostid;
+	}
+
+	public void setHostid(String hostid) {
+		this.hostid = hostid;
+	}
+
+	public String getHostIP() {
+		return hostIP;
+	}
+
+	public void setHostIP(String hostIP) {
+		this.hostIP = hostIP;
+	}
+
+	public String getGroupid() {
+		return Groupid;
+	}
+
+	public void setGroupid(String groupid) {
+		Groupid = groupid;
+	}
+
+	public String getGroupname() {
+		return Groupname;
+	}
+
+	public void setGroupname(String groupname) {
+		Groupname = groupname;
+	}
+
+	public String getSNMP() {
+		return SNMP;
+	}
+
+	public void setSNMP(String sNMP) {
+		SNMP = sNMP;
+	}
+
+	public String getSNMP_community() {
+		return SNMP_community;
+	}
+
+	public void setSNMP_community(String sNMP_community) {
+		SNMP_community = sNMP_community;
+	}
+
+	public String getSNMP_version() {
+		return SNMP_version;
+	}
+
+	public void setSNMP_version(String sNMP_version) {
+		SNMP_version = sNMP_version;
+	}
+
+	public String getDescription() {
+		return Description;
+	}
+
+	public void setDescription(String description) {
+		Description = description;
+	}
+
 	public String IP() {
 		return hostIP;
 	}
@@ -39,7 +111,7 @@ public class Host {
 		return Description;
 	}
 	
-	public Host(String name, String id) {
+	public Host(String id, String name) {
 		hostName = name;
 		hostid =id;
 	}

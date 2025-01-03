@@ -15,7 +15,6 @@ import org.json.JSONObject;
 
 import Model.Disk;
 import Model.Item;
-import io.github.hengyunabc.zabbix.api.ZabbixApi;
 
 public class Item_get {
 	
@@ -38,8 +37,19 @@ public class Item_get {
 	public static void setToken(String token) {
 		Token = token;
 	}
+	
+	public static void main(String[] args) {
+        String token = Item_get.getInstance().authenticate("Admin", "zabbix");
+        System.out.println(token);
+        try {
+			getInstance().getFullItem(token);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-	private static String ZABBIX_API_URL = "http://192.168.0.69/zabbix/api_jsonrpc.php";
+	private static String ZABBIX_API_URL = "http://10.10.1.180/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.29.193/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.59.231/zabbix/api_jsonrpc.php";
 //	private static String ZABBIX_API_URL = "http://10.10.50.254/zabbix/api_jsonrpc.php";
@@ -54,7 +64,7 @@ public class Item_get {
 	}
 
     // Lấy token xác thực từ Zabbix
-    public String authenticate(String USERNAME, String PASSWORD) {
+	public String authenticate(String USERNAME, String PASSWORD) {
         try {
 			URL url = new URL(ZABBIX_API_URL);
 		} catch (MalformedURLException e) {
@@ -67,21 +77,25 @@ public class Item_get {
                 .put("jsonrpc", "2.0")
                 .put("method", "user.login")
                 .put("params", new JSONObject()
-                        .put("username", USERNAME) // Đổi "username" thành "user" cho đúng chuẩn API của Zabbix
+                        .put("username", USERNAME) // �?ổi "username" thành "user" cho đúng chuẩn API của Zabbix
                         .put("password", PASSWORD))
                 .put("id", 1);
         
-        // Đọc phản hồi từ Zabbix
+        // �?�?c phản hồi từ Zabbix
         JSONObject jsonResponse = null;
 		try {
 			jsonResponse = Item_get.getInstance().sendRequest(authRequest);
+		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		Token = jsonResponse.getString("result");
-
-        return jsonResponse.getString("result"); // Auth token nằm trong "result"
+		
+		if	(jsonResponse.has("error")) {
+			Token = "error: " + jsonResponse.getJSONObject("error").getString("data");
+		}else {
+			Token = jsonResponse.optString("result", "0");
+		}
+        return Token; // Auth token nằm trong "result"
     }
     
 	// Lấy 1 thông tin với key
@@ -101,8 +115,8 @@ public class Item_get {
         return rs;
     }
     
-    // Hàm lấy thông tin nhiều ổ 
-    List<Disk> getDiskInfo(String hostId, String authToken) throws Exception {
+    // Hàm lấy thông tin nhi�?u ổ 
+    public List<Disk> getDiskInfo(String hostId, String authToken) throws Exception {
         JSONObject request = new JSONObject();
         request.put("jsonrpc", "2.0");
         request.put("method", "item.get");
@@ -116,14 +130,14 @@ public class Item_get {
         JSONObject response = sendRequest(request);
         JSONArray items = new JSONObject(response.toString()).getJSONArray("result");
 
-        List<Disk> diskInfoList = new ArrayList<>();
+        List<Disk> diskInfoList = new ArrayList<Disk>();
 
         for (int i = 0; i < items.length(); i++) {
             JSONObject item = items.getJSONObject(i);
             String diskName = item.getString("name");
             String lastValueStr = item.optString("lastvalue", ""); // Lấy giá trị lastvalue
 
-            // Bỏ qua mục không cần thiết
+            // B�? qua mục không cần thiết
             if (diskName.contains("Windows: SNMP walk mounted filesystems")) {
                 continue;
             }
@@ -138,19 +152,19 @@ public class Item_get {
                     if (diskName.contains("%")) {
                         // Giá trị là phần trăm, không cần chia
                     	double lastValue = Double.parseDouble(lastValueStr); // Chuyển đổi sang double
-                        lastValueOutput = String.format("%.2f", lastValue) + " %"; // Lưu lại giá trị phần trăm
+                        lastValueOutput = String.format("%.2f", lastValue); // Lưu lại giá trị phần trăm
                     } else {
                         // Giá trị là dung lượng, chia cho 1024^3 để chuyển đổi thành GB
                         double lastValue = Double.parseDouble(lastValueStr); // Chuyển đổi sang double
                         lastValueInGB = lastValue / (1024 * 1024 * 1024); // Chia để chuyển đổi thành GB
-                        lastValueOutput = String.format("%.2f GB", lastValueInGB); // Định dạng giá trị ra 2 chữ số thập phân
+                        lastValueOutput = String.format("%.2f", lastValueInGB); // �?ịnh dạng giá trị ra 2 chữ số thập phân
                     }
                 } catch (NumberFormatException e) {
-                    // Bỏ qua các lỗi khi phân tích giá trị
-                    continue; // Bỏ qua nếu có lỗi
+                    // B�? qua các lỗi khi phân tích giá trị
+                    continue; // B�? qua nếu có lỗi
                 }
             } else {
-                continue; // Bỏ qua nếu giá trị trống
+                continue; // B�? qua nếu giá trị trống
             }
 
             // Thêm thông tin ổ đĩa vào danh sách
@@ -161,7 +175,7 @@ public class Item_get {
     }
     
     // Hàm gửi và lấy JSONArray
-    public JSONArray getJSONresponse(String hostId, String method, String key, String authToken) throws IOException {
+    public JSONArray getJSONresponse(final String hostId, String method, final String key, String authToken) throws IOException {
         String Value = "0";
         JSONObject json = new JSONObject();
 	        json.put("jsonrpc", "2.0");
@@ -199,7 +213,7 @@ public class Item_get {
             os.flush();
         }
 
-        // Đọc phản hồi
+        // �?�?c phản hồi
         StringBuilder response = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             String line;
@@ -256,5 +270,30 @@ public class Item_get {
   	    return (result.length() > 0 && result.getJSONObject(0).has("name"))
   	            ? result.getJSONObject(0).getString("name")
   	            : "No item name found";
+  	}
+  	
+//Lấy full item
+  	
+  	public String getFullItem(String authToken) throws Exception {
+  	    // Tạo đối tượng request JSON để gửi yêu cầu
+  	    JSONObject request = new JSONObject();
+  	    request.put("jsonrpc", "2.0");
+  	    request.put("method", "item.get");
+  	    request.put("id", 3);
+  	    request.put("auth", authToken);
+  	    request.put("params", new JSONObject()
+  	            .put("output", new JSONArray().put("name").put("itemid")
+  	            		.put("key_")
+  	            		.put("snmp_oid"))
+  	           
+  	    );
+
+  	    // Gửi yêu cầu và nhận phản hồi
+  	    JSONObject response = Item_get.getInstance().sendRequest(request);
+  	    System.out.print(response);
+  	    JSONArray result = response != null ? response.optJSONArray("result") : new JSONArray();
+
+  	    // Trả về tên item nếu tìm thấy, ngược lại trả về "No item name found"
+  	    return result.toString();
   	}
 }

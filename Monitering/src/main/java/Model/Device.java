@@ -3,6 +3,7 @@ package Model;
 import java.util.List;
 
 public class Device {
+
 	String Name;
 	String hostid;
 	String hostIP;
@@ -19,12 +20,12 @@ public class Device {
 	
 	public Device( String name, String id, String IP, Item SNMP_avai, Item CPUul, Item receive, Item send, Item R_t, Item R_us, Item R_ut, Item hard, Item net, List<Disk> LD ) {
 		Name = name;
-		hostid = id;
-		hostIP = IP ;
+		this.hostid = id;
+		this.hostIP = IP	;
 		SNMP = SNMP_avai;
 		CPU = CPUul;
-		bitReceive = receive;
-		bitSend = send;
+		this.bitReceive = receive;
+		this.bitSend = send;
 		RAM_total = R_t;
 		RAM_used = R_us;
 		RAM_util = R_ut;
@@ -32,11 +33,7 @@ public class Device {
 		Time_network = net;
 		ListDisk = LD;
 	}
-	
-	public Device() {
-		
-	}
-	
+
 	public void Display() {
 		
 		System.out.print("Name: " + Name + "\n");

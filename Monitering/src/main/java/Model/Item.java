@@ -2,7 +2,14 @@ package Model;
 
 public class Item {
 	String id;
+	String name;
 	String value;
+	
+	public Item(String itid, String itname, String itvalue) {
+		id = itid;
+		name = itname;
+		value = itvalue;
+	}
 	
 	public Item(String tid, String itvalue) {
 		id = tid;

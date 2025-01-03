@@ -1,35 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://java.sun.com/xml/ns/javaee"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-                             http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-         version="3.0">
-
-  <!-- Định nghĩa servlet getthongtin -->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
   <servlet>
     <servlet-name>getthongtin</servlet-name>
     <servlet-class>controller.getthongtin</servlet-class>
   </servlet>
-
-  <!-- Định nghĩa servlet controller.C_Graph -->
   <servlet>
     <servlet-name>controller.C_Graph</servlet-name>
     <servlet-class>controller.C_Graph</servlet-class>
   </servlet>
-
-  <!-- Định nghĩa servlet-mapping cho getthongtin -->
   <servlet-mapping>
     <servlet-name>getthongtin</servlet-name>
     <url-pattern>/getthongtin</url-pattern>
   </servlet-mapping>
-
-  <!-- Định nghĩa servlet-mapping cho controller.C_Graph -->
   <servlet-mapping>
     <servlet-name>controller.C_Graph</servlet-name>
     <url-pattern>/controller.C_Graph</url-pattern>
   </servlet-mapping>
-
-  <!-- Định nghĩa welcome-file-list -->
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -38,5 +24,104 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-
+  <servlet>
+    <description></description>
+    <display-name>detailDevice</display-name>
+    <servlet-name>detailDevice</servlet-name>
+    <servlet-class>controller.detailDevice</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>detailDevice</servlet-name>
+    <url-pattern>/detailDevice</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>deleteHost</display-name>
+    <servlet-name>deleteHost</servlet-name>
+    <servlet-class>controller.deleteHost</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>deleteHost</servlet-name>
+    <url-pattern>/deleteHost</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>addHost</display-name>
+    <servlet-name>addHost</servlet-name>
+    <servlet-class>controller.addHost</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>addHost</servlet-name>
+    <url-pattern>/addHost</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>updateHost</display-name>
+    <servlet-name>updateHost</servlet-name>
+    <servlet-class>controller.updateHost</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>updateHost</servlet-name>
+    <url-pattern>/updateHost</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>addHostGroup</display-name>
+    <servlet-name>addHostGroup</servlet-name>
+    <servlet-class>controller.addHostGroup</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>addHostGroup</servlet-name>
+    <url-pattern>/addHostGroup</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>deleteHostGroup</display-name>
+    <servlet-name>deleteHostGroup</servlet-name>
+    <servlet-class>controller.deleteHostGroup</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>deleteHostGroup</servlet-name>
+    <url-pattern>/deleteHostGroup</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>updateHostGroup</display-name>
+    <servlet-name>updateHostGroup</servlet-name>
+    <servlet-class>controller.updateHostGroup</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>updateHostGroup</servlet-name>
+    <url-pattern>/updateHostGroup</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>getListHostGroup</display-name>
+    <servlet-name>getListHostGroup</servlet-name>
+    <servlet-class>controller.getListHostGroup</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getListHostGroup</servlet-name>
+    <url-pattern>/getListHostGroup</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>problem</display-name>
+    <servlet-name>problem</servlet-name>
+    <servlet-class>controller.problem</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>problem</servlet-name>
+    <url-pattern>/problem</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>dasdboard</display-name>
+    <servlet-name>dasdboard</servlet-name>
+    <servlet-class>controller.dasdboard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>dasdboard</servlet-name>
+    <url-pattern>/dasdboard</url-pattern>
+  </servlet-mapping>
 </web-app>
