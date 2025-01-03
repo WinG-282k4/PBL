@@ -272,6 +272,7 @@ public class Host_CRUD {
     	 JSONObject jsonResponse = null;
   		try {
   			jsonResponse = Item_get.getInstance().sendRequest(request);
+  			System.out.print(jsonResponse);
   		} catch (IOException e) {
   			// TODO Auto-generated catch block
   			e.printStackTrace();

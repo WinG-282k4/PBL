@@ -48,7 +48,7 @@ public class addHost extends HttpServlet {
 		String hostIP=request.getParameter("hostIP");
 		String Groupid=request.getParameter("Groupid");
 		String Groupname=request.getParameter("Groupname");
-		String SNMP=null;
+		String SNMP = null;
 		String SNMP_community=request.getParameter("SNMP_community");
 		String SNMP_version=request.getParameter("SNMP_version");
 		String Description=request.getParameter("Description");
